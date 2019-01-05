@@ -145,6 +145,7 @@
     </div>
 </template>
 <script>
+    import {setTagviewsInLocalstorage, getTagviewsFromLocalstorage} from './store/util.js'
     export default {
         data () {
             return {
@@ -153,7 +154,7 @@
         },
         mounted:function(){
             // 首次加载读取之前打开的标签
-            this.addViewTags();
+            this.$store.dispatch('setVisitedViews');
         },
         computed: {
             //缩放左侧导航
