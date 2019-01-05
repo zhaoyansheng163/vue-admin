@@ -8,7 +8,7 @@ var routers = [
       name: 'root',
       redirect: '/home',
       meta: {
-        title: '后台首页'
+        title: '首页'
       },
       component: Layout,
       children: [
@@ -16,7 +16,7 @@ var routers = [
           path: '/home',
           name: 'home',
           meta: {
-            title: '后台首页'
+            title: '首页'
           },
           component: () => import('@/views/index.vue')
         }
@@ -26,7 +26,8 @@ var routers = [
 
 // 导入tpvue核心模块路由
 import core from '@/views/module/core/route.js'
-var children = routers[0].children.concat(core);
+routers = routers.concat(core.parent);
+var children = routers[0].children.concat(core.children);
 routers[0].children = children;
 
 // 导入其它模块路由
