@@ -94,28 +94,49 @@
         font-size: 22px;
         margin-top: -5px;
     }
+    .left-menu a.title {
+        color: #fff;
+    }
 </style>
 <template>
     <div class="layout">
         <Layout :style="{height: '100vh'}">
-            <Sider :style="{overflow: 'hidden'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
-                <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
-                    <MenuItem name="1-1">
-                        <router-link to="/home">
-                            <Icon type="ios-home"></Icon>
-                            <span>首页</span>
-                        </router-link>
-                    </MenuItem>
-                    <MenuItem name="1-2">
-                        <router-link to="/core/user/list">
-                            <Icon type="ios-search"></Icon>
-                            <span>Option 2</span>
-                        </router-link>
-                    </MenuItem>
-                    <MenuItem name="1-3">
-                        <Icon type="ios-settings"></Icon>
-                        <span>Option 3</span>
-                    </MenuItem>
+            <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
+                <Menu active-name="1-2" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
+                    <template v-for="(item) in this.get_menu_list">
+                        <Submenu v-if="item.menu_type == 'top'" name="{item.name}" :key="item.name">
+                            <template slot="title">
+                                <Icon type="ios-filing" />
+                                {{item.title}}
+                            </template>
+
+                            <MenuItem name="2-1">Option 5</MenuItem>
+                            <MenuItem name="2-2">Option 6</MenuItem>
+                            <Submenu name="3">
+                                <template slot="title">Submenu</template>
+                                <MenuItem name="3-1">Option 7</MenuItem>
+                                <MenuItem name="3-2">Option 8</MenuItem>
+                            </Submenu>
+                        </Submenu>
+                        <Submenu v-else-if="item.menu_type == 'cate'" name="{item.name}" :key="item.name">
+                            <template slot="title">
+                                <Icon type="ios-filing" />
+                                {{item.title}}
+                            </template>
+                            <MenuItem name="2-1" v-for="(item2) in item._child" :key="item.name + item2.name">
+                                <router-link class="title" :to="item2" :key="item2.path">
+                                    <Icon type="ios-filing" />
+                                    <span>{{item2.title}}</span>
+                                </router-link>
+                            </MenuItem>
+                        </Submenu>
+                        <MenuItem name="{item.name}" v-else-if="item.menu_type == 'page'" :key="item.name">
+                            <router-link class="title" :to="item" :key="item.path">
+                                <Icon type="ios-filing" />
+                                <span >{{item.title}}</span>
+                            </router-link>
+                        </MenuItem>
+                    </template>
                 </Menu>
             </Sider>
             <Layout >
@@ -126,7 +147,7 @@
                     <Layout class="main-layout-con" :style="{height: '100%'}">
                         <Content class="tag-nav-wrapper" :style="{ height: '40px', backgroundColor: '#f0f0f0'}">
                             <div class="tags-view-wrapper">
-                                <router-link class="tags-view-item" :to="item" :key="item.path" :class="isActive(item)?'active':''" v-for="(item) in Array.from(visitedViews)">
+                                <router-link class="tags-view-item" :to="item" :key="item.path" :class="isActive(item)?'active':''" v-for="(item) in Array.from(this.get_visitedviews)">
                                     <span class="dot"></span>
                                     <span class="title">{{item.title}}</span>
                                     <Icon v-if="item.name != 'home'" class="close-tag" type="ios-close" @click.prevent.stop='delSelectTag(item)'/>
@@ -145,6 +166,9 @@
     </div>
 </template>
 <script>
+    import axios from 'axios';
+    import Layout from '@/views/layout';
+    import { mapMutations, mapActions, mapGetters } from 'vuex'
     import {setTagviewsInLocalstorage, getTagviewsFromLocalstorage} from './store/util.js'
     export default {
         data () {
@@ -152,11 +176,62 @@
                 isCollapsed: false
             };
         },
+        created: function () {
+            // 获取API接口返回的左侧导航列表
+            var routes = [
+                {
+                    path: '/',
+                    name: 'root',
+                    redirect: '/home',
+                    meta: {
+                        title: '首页'
+                    },
+                    component: Layout,
+                    children: [
+                        {
+                            path: '/home',
+                            name: 'home',
+                            meta: {
+                                title: '首页'
+                            },
+                            component: () => import('@/views/index.vue')
+                        }
+                    ]
+                }
+            ]
+            var children = [];
+
+            // 获取菜单
+            var _this = this;
+            var menu_list = this.$store.state.menu.get_menu_list;
+            if(!menu_list){
+                axios.get('http://tpvue.com.dev/api/core/menu')
+                    .then(function (res) {
+                        res = res.data;
+                        if(res.code=='200'){
+                            menu_list = res.data.menu_list;
+                            _this.$store.dispatch('setMenuList',menu_list);
+                        }else{
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            routes[0].children = children;
+            this.$router.addRoutes(routes)
+        },
         mounted:function(){
             // 首次加载读取之前打开的标签
             this.$store.dispatch('setVisitedViews');
         },
         computed: {
+            ...mapGetters([
+                'get_visitedviews', //多标签数据
+                'get_menu_list' //左侧导航
+            ]),
+
             //缩放左侧导航
             rotateIcon () {
                 return [
@@ -170,12 +245,6 @@
                     this.isCollapsed ? 'collapsed-menu' : ''
                 ]
             },
-
-            //多标签数据
-            visitedViews(){
-                //store中取值
-                return this.$store.state.tagsview.visitedviews
-            }
         },
         methods: {
             //缩放左侧导航

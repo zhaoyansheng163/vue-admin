@@ -62,6 +62,8 @@
 </template>
 <script>
     export default {
+        created: function () {
+        },
         methods: {
             go_core_user_login () {
                 this.$router.push('core/user/login')

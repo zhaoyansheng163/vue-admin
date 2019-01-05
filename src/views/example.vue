@@ -15,11 +15,26 @@
 
 <script>
     export default {
+        data () {
+            return {
+                data_list: []
+            };
+        },
+        beforeCreate: function () {},
+        created: function () {},
+        beforeMount: function () {},
+        mounted: function () {},
+        beforeUpdate: function () {},
+        updated: function () {},
+        beforeDestroy: function () {},
+        destroyed: function () {},
+        computed: {
+            test(){}
+        },
         methods: {
-            loadData () {
-                
-            }
-        }
+            loadData () {  }
+        },
+        watch:{}
     }
 </script>
 

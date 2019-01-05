@@ -16,6 +16,9 @@ export default {
         visitedviews:[],//存放所有浏览过的且不重复的路由数据
      },
      getters: {
+        get_visitedviews: state => {
+            return state.visitedviews
+        }
      },
      mutations: {
         add_visited_views:(state,view)=>{
