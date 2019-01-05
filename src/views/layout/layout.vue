@@ -1,9 +1,9 @@
 <style scoped>
     .layout{
-        border: 1px solid #d7dde4;
+        border: 0px solid #d7dde4;
         background: #f5f7f9;
         position: relative;
-        border-radius: 4px;
+        border-radius: 0px;
         overflow: hidden;
     }
     .layout-header-bar{
@@ -51,8 +51,8 @@
 </style>
 <template>
     <div class="layout">
-        <Layout>
-            <Sider :style="{height: '100vh', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
+        <Layout :style="{height: '100vh'}">
+            <Sider :style="{overflow: 'hidden'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
                 <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
                     <MenuItem name="1-1">
                         <Icon type="ios-navigate"></Icon>
@@ -68,16 +68,16 @@
                     </MenuItem>
                 </Menu>
             </Sider>
-            <Layout>
-                <Header :style="{'z-index': 9999, width: '100%', paddingLeft: '20px'}" class="layout-header-bar">
+            <Layout >
+                <Header :style="{width: '100%', paddingLeft: '20px'}" class="layout-header-bar">
                     <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0px'}" type="md-menu" size="24"></Icon>
                 </Header>
-                <Content class="main-content-con">
-                    <Layout class="main-layout-con">
+                <Content class="main-content-con" :style="{height: 'calc(100% - 60px)', overflow: 'hidden'}">
+                    <Layout class="main-layout-con" :style="{height: '100%'}">
                         <div class="tag-nav-wrapper">
                             
                         </div>
-                        <Content class="content-wrapper">
+                        <Content class="content-wrapper" :style="{height: 'calc(100% - 80px)', overflow: 'auto', padding: '15px'}">
                             <keep-alive>
                                 <router-view/>
                             </keep-alive>

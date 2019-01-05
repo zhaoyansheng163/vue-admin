@@ -14,6 +14,38 @@
                     <Button @click="go_core_user_list">用户列表</Button>
                 </h2>
             </Col>
+            <Col span="24">
+                <h1>
+                    <img src="@/assets/logo.png">
+                </h1>
+                <h2>
+                    <p>Welcome to your iView app!</p>
+                    <Button @click="handleStart">Start iView</Button>
+                    <Button @click="go_core_user_login">登录</Button>
+                    <Button @click="go_core_user_list">用户列表</Button>
+                </h2>
+            </Col><Col span="24">
+                <h1>
+                    <img src="@/assets/logo.png">
+                </h1>
+                <h2>
+                    <p>Welcome to your iView app!</p>
+                    <Button @click="handleStart">Start iView</Button>
+                    <Button @click="go_core_user_login">登录</Button>
+                    <Button @click="go_core_user_list">用户列表</Button>
+                </h2>
+            </Col>
+            <Col span="24">
+                <h1>
+                    <img src="@/assets/logo.png">
+                </h1>
+                <h2>
+                    <p>Welcome to your iView app!</p>
+                    <Button @click="handleStart">Start iView</Button>
+                    <Button @click="go_core_user_login">登录</Button>
+                    <Button @click="go_core_user_list">用户列表</Button>
+                </h2>
+            </Col>
         </Row>
     </div>
 </template>
