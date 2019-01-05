@@ -1,3 +1,14 @@
+/**
+ * +----------------------------------------------------------------------
+ * | tpvue-admin [ 轻量级模块化Vue后台 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2018-2019 http://tpvue.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+ * +----------------------------------------------------------------------
+ * | Author: jry <598821125@qq.com>
+ * +----------------------------------------------------------------------
+*/
 <style scoped>
     .layout{
         border: 0px solid #d7dde4;
@@ -118,7 +129,7 @@
                                 <router-link class="tags-view-item" :to="item" :key="item.path" :class="isActive(item)?'active':''" v-for="(item) in Array.from(visitedViews)">
                                     <span class="dot"></span>
                                     <span class="title">{{item.title}}</span>
-                                    <Icon class="close-tag" type="ios-close" @click.prevent.stop='delSelectTag(item)'/>
+                                    <Icon v-if="item.name != 'home'" class="close-tag" type="ios-close" @click.prevent.stop='delSelectTag(item)'/>
                                 </router-link>
                             </div>
                         </Content>
@@ -141,7 +152,7 @@
             };
         },
         mounted:function(){
-            // 首次加载触发标签添加
+            // 首次加载读取之前打开的标签
             this.addViewTags();
         },
         computed: {
