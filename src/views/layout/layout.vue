@@ -91,12 +91,12 @@
                 <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
                     <MenuItem name="1-1">
                         <router-link to="/home">
-                            <Icon type="ios-navigate"></Icon>
+                            <Icon type="ios-home"></Icon>
                             <span>首页</span>
                         </router-link>
                     </MenuItem>
                     <MenuItem name="1-2">
-                        <router-link to="/core/user/login">
+                        <router-link to="/core/user/list">
                             <Icon type="ios-search"></Icon>
                             <span>Option 2</span>
                         </router-link>
@@ -109,7 +109,7 @@
             </Sider>
             <Layout >
                 <Header :style="{width: '100%', paddingLeft: '20px'}" class="layout-header-bar">
-                    <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0px'}" type="md-menu" size="24"></Icon>
+                    <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0px', cursor: 'pointer'}" type="md-menu" size="24"></Icon>
                 </Header>
                 <Content class="main-content-con" :style="{height: 'calc(100% - 60px)', overflow: 'hidden'}">
                     <Layout class="main-layout-con" :style="{height: '100%'}">
@@ -118,7 +118,7 @@
                                 <router-link class="tags-view-item" :to="item" :key="item.path" :class="isActive(item)?'active':''" v-for="(item) in Array.from(visitedViews)">
                                     <span class="dot"></span>
                                     <span class="title">{{item.title}}</span>
-                                    <Icon class="close-tag" type="ios-close" @click.prevent.stop='closeSelectedTag(item)'/>
+                                    <Icon class="close-tag" type="ios-close" @click.prevent.stop='delSelectTag(item)'/>
                                 </router-link>
                             </div>
                         </Content>
@@ -184,6 +184,7 @@
             },
             //先提交删除数据的方法,数组删除出掉数据后，如果关闭的是当前打开的路由需要将路由改为数组最后一次push进去的路由
             delSelectTag(route){
+                console.log(route)
                 this.$store.dispatch('delVisitedViews',route).then((views)=>{
                     if(this.isActive(route)){//只有在关闭当前打开的标签页才会有影响
                     let lastView = views.slice(-1)[0]//选取路由数组中的最后一位
