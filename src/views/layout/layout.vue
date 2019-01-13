@@ -205,7 +205,7 @@
             var _this = this;
             var menu_list = this.$store.state.menu.get_menu_list;
             if(!menu_list){
-                axios.get('http://tpvue.com.dev/api/core/menu')
+                axios.get('http://tpvue.com.dev/api/core/menu/lists')
                     .then(function (res) {
                         res = res.data;
                         if(res.code=='200'){
