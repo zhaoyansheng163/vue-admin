@@ -94,48 +94,29 @@
         font-size: 22px;
         margin-top: -5px;
     }
-    .left-menu a.title {
-        color: #fff;
-    }
 </style>
 <template>
     <div class="layout">
         <Layout :style="{height: '100vh'}">
+            
             <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
-                <Menu active-name="1-2" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
-                    <template v-for="(item) in this.get_menu_list">
-                        <Submenu v-if="item.menu_type == 'top'" name="{item.name}" :key="item.name">
+                <Menu :open-names="['0']" active-name="0-1" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
+                    <template v-for="(item1,key1,index1) in this.get_menu_list">
+                        <Submenu v-if="item1.level == '1'" :name="index1" :key="item1.name">
                             <template slot="title">
                                 <Icon type="ios-filing" />
-                                {{item.title}}
+                                {{item1.title}}
                             </template>
-
-                            <MenuItem name="2-1">Option 5</MenuItem>
-                            <MenuItem name="2-2">Option 6</MenuItem>
-                            <Submenu name="3">
-                                <template slot="title">Submenu</template>
-                                <MenuItem name="3-1">Option 7</MenuItem>
-                                <MenuItem name="3-2">Option 8</MenuItem>
-                            </Submenu>
-                        </Submenu>
-                        <Submenu v-else-if="item.menu_type == 'cate'" name="{item.name}" :key="item.name">
-                            <template slot="title">
-                                <Icon type="ios-filing" />
-                                {{item.title}}
+                            <template v-if="item1._child">
+                                <template v-for="(item2,key2,index2) in item1._child">
+                                    <Submenu v-if="item2._child" :key="item2.name" name="">
+                                        <template slot="title">{{item2.title}}</template>
+                                        <MenuItem :key="item3.name" v-for="(item3,key3,index3) in item2._child" :to="item3.route" :name="index1 + '-' +index2 + '-' +index3">{{item3.title}}</MenuItem>
+                                    </Submenu>
+                                    <MenuItem v-else :key="item2.name" :to="key2" :name="index1 + '-' +index2">{{item2.title}}</MenuItem>
+                                </template>
                             </template>
-                            <MenuItem name="2-1" v-for="(item2) in item._child" :key="item.name + item2.name">
-                                <router-link class="title" :to="item2" :key="item2.path">
-                                    <Icon type="ios-filing" />
-                                    <span>{{item2.title}}</span>
-                                </router-link>
-                            </MenuItem>
                         </Submenu>
-                        <MenuItem name="{item.name}" v-else-if="item.menu_type == 'page'" :key="item.name">
-                            <router-link class="title" :to="item" :key="item.path">
-                                <Icon type="ios-filing" />
-                                <span >{{item.title}}</span>
-                            </router-link>
-                        </MenuItem>
                     </template>
                 </Menu>
             </Sider>
@@ -204,7 +185,7 @@
             let _this = this;
             let menu_list = this.$store.state.menu.get_menu_list;
             if(!menu_list){
-                this.axios.get('core/menu/lists')
+                axios.get('v1/core/admin/menu/lists')
                     .then(function (res) {
                         res = res.data;
                         if(res.code=='200'){
