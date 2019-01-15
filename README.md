@@ -1,4 +1,4 @@
-# tpvue-admin
+# apptool
 
 ## Project setup
 ```

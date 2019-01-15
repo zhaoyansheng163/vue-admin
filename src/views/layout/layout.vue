@@ -166,7 +166,6 @@
     </div>
 </template>
 <script>
-    import axios from 'axios';
     import Layout from '@/views/layout';
     import { mapMutations, mapActions, mapGetters } from 'vuex'
     import {setTagviewsInLocalstorage, getTagviewsFromLocalstorage} from './store/util.js'
@@ -202,10 +201,10 @@
             var children = [];
 
             // 获取菜单
-            var _this = this;
-            var menu_list = this.$store.state.menu.get_menu_list;
+            let _this = this;
+            let menu_list = this.$store.state.menu.get_menu_list;
             if(!menu_list){
-                axios.get('http://tpvue.com.dev/api/core/menu/lists')
+                this.axios.get('core/menu/lists')
                     .then(function (res) {
                         res = res.data;
                         if(res.code=='200'){
@@ -265,15 +264,14 @@
             },
             //先提交删除数据的方法,数组删除出掉数据后，如果关闭的是当前打开的路由需要将路由改为数组最后一次push进去的路由
             delSelectTag(route){
-                console.log(route)
                 this.$store.dispatch('delVisitedViews',route).then((views)=>{
                     if(this.isActive(route)){//只有在关闭当前打开的标签页才会有影响
-                    let lastView = views.slice(-1)[0]//选取路由数组中的最后一位
-                    if(lastView){
-                        this.$router.push(lastView);
-                    }else{
-                        this.$router.push('/');
-                    }
+                        let lastView = views.slice(-1)[0]//选取路由数组中的最后一位
+                        if(lastView){
+                            this.$router.push(lastView);
+                        }else{
+                            this.$router.push('/');
+                        }
                     }
                 })
             }
