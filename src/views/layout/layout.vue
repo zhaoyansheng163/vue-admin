@@ -100,7 +100,7 @@
         <Layout :style="{height: '100vh'}">
             
             <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
-                <Menu :open-names="['0']" active-name="0-1" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
+                <Menu :open-names="['0']" active-name="activeRoute" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
                     <template v-for="(item1,key1,index1) in this.get_menu_list">
                         <Submenu v-if="item1.level == '1'" :name="index1" :key="item1.name">
                             <template slot="title">
@@ -153,6 +153,7 @@
     export default {
         data () {
             return {
+                activeRoute: '0-1',
                 isCollapsed: false
             };
         },
@@ -184,12 +185,31 @@
             // 获取菜单
             let _this = this;
             let menu_list = this.$store.state.menu.get_menu_list;
-            if(!menu_list){
+            if(!menu_list){      
                 axios.get('v1/core/admin/menu/lists')
                     .then(function (res) {
                         res = res.data;
                         if(res.code=='200'){
                             menu_list = res.data.menu_list;
+                            for(let index1 in menu_list) {
+                                if(menu_list[index1]._child){
+                                    for(let index2 in menu_list[index1]._child) { 
+                                        console.log(menu_list[index1]._child[index2])
+                                        children.push(
+                                            {
+                                                path: index2,
+                                                name: index2,
+                                                meta: {
+                                                    title: menu_list[index1]._child[index2].title
+                                                },
+                                                component: () => import('@/views/module'+index2+'.vue')
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                            routes[0].children = children;
+                            _this.$router.addRoutes(routes)
                             _this.$store.dispatch('setMenuList',menu_list);
                         }else{
                         }
@@ -198,9 +218,6 @@
                         console.log(error);
                     });
             }
-
-            routes[0].children = children;
-            this.$router.addRoutes(routes)
         },
         mounted:function(){
             // 首次加载读取之前打开的标签

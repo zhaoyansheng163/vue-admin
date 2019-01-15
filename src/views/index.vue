@@ -69,7 +69,7 @@
                 this.$router.push('core/user/login')
             },
             go_core_user_list () {
-                this.$router.push('core/user/list')
+                this.$router.push('core/user/lists')
             },
             handleStart () {
                 this.$Modal.info({
