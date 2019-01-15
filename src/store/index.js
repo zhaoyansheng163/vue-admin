@@ -14,6 +14,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import app from './module/app'
+import user from './module/user'
 
 import tagsview from '@/views/layout/store/tagsview' //多标签
 import menu from '@/views/layout/store/menu' //左侧导航
@@ -32,6 +33,7 @@ export default new Vuex.Store({
   },
   modules: {
     app,
+    user,
     tagsview,
     menu
   }

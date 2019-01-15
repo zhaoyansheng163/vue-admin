@@ -226,7 +226,8 @@
         computed: {
             ...mapGetters([
                 'get_visitedviews', //多标签数据
-                'get_menu_list' //左侧导航
+                'get_menu_list', //左侧导航
+                'get_token' // token
             ]),
 
             //缩放左侧导航

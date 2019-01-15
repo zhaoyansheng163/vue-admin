@@ -11,7 +11,7 @@
 */
 
 export default {
- state: {
+  state: {
   },
   getters: {
   },

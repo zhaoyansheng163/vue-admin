@@ -24,6 +24,12 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  //判断是否存在登录成功返回的token
+  if(!this.get_token){
+    this.$router.push('core/user/login')
+  }
+
+  //进度条
   iView.LoadingBar.start();
   util.title(to.meta.title);
   next();
