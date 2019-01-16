@@ -1,14 +1,23 @@
 "use strict";
 
 import Vue from 'vue';
+import qs from 'qs';
 import axios from "axios";
+import util from '@/libs/util';
 
 // Full config:  https://github.com/axios/axios#request-config
-//axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-axios.defaults.headers.post['Content-Type'] = 'application/json'; // application/x-www-form-urlencoded或者application/json
-
+axios.defaults.headers.common['Authorization'] = 'bearer ' + util.getToken();
+const contentType = 'application/x-www-form-urlencoded'  // application/x-www-form-urlencoded或者application/json
+axios.defaults.headers.post['Content-Type'] = contentType;
+axios.defaults.transformRequest = data => {
+    if (contentType == 'application/x-www-form-urlencoded') {
+      return qs.stringify(data)
+    } else {
+      return data
+    }
+};
 let config = {
-  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'https://ufgacz-80-loybsg.dev.ide.live/api/',
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'https://ufgacz-80-gyqbmz.dev.ide.live/api/',
   timeout: 60 * 1000, // Timeout
   withCredentials: false, // Check cross-site Access-Control
 };
