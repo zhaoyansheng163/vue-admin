@@ -100,7 +100,7 @@
         <Layout :style="{height: '100vh'}">
             
             <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
-                <Menu :open-names="['0']" active-name="activeRoute" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
+                <Menu :open-names="['0']" active-name="activeLeft" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
                     <template v-for="(item1,key1,index1) in this.get_menu_list">
                         <Submenu v-if="item1.level == '1'" :name="index1" :key="item1.name">
                             <template slot="title">
@@ -153,11 +153,11 @@
     export default {
         data () {
             return {
-                activeRoute: '0-1',
+                activeLeft: '0-1',
                 isCollapsed: false
             };
         },
-        created: function () {
+        beforeMount: function () {
             // 获取API接口返回的左侧导航列表
             var routes = [
                 {
@@ -208,7 +208,7 @@
                                     }
                                 }
                             }
-                            routes[0].children = children;
+                            routes[0].children = children
                             _this.$router.addRoutes(routes)
                             _this.$store.dispatch('setMenuList',menu_list);
                         }else{
@@ -226,8 +226,7 @@
         computed: {
             ...mapGetters([
                 'get_visitedviews', //多标签数据
-                'get_menu_list', //左侧导航
-                'get_token' // token
+                'get_menu_list' //左侧导航
             ]),
 
             //缩放左侧导航

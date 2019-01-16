@@ -52,6 +52,7 @@
     export default {
         methods: {
             login () {
+                this.$store.commit('set_token', 'asdasdasd')
                 this.$router.push('/')
             }
         }

@@ -8,9 +8,9 @@ import axios from "axios";
 axios.defaults.headers.post['Content-Type'] = 'application/json'; // application/x-www-form-urlencoded或者application/json
 
 let config = {
-  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'http://tpvue.dev/api/',
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'https://ufgacz-80-loybsg.dev.ide.live/api/',
   timeout: 60 * 1000, // Timeout
-  withCredentials: true, // Check cross-site Access-Control
+  withCredentials: false, // Check cross-site Access-Control
 };
 
 const _axios = axios.create(config);

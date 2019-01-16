@@ -10,13 +10,5 @@ export default {
     }
   ],
   children: [
-    // {
-    //   name: '/core/user/list',
-    //   path: '/core/user/list',
-    //   meta: {
-    //     title: '用户列表'
-    //   },
-    //   component: () => import('./user/list.vue')
-    // }
   ]
 }

@@ -1,6 +1,6 @@
 /**
  * +----------------------------------------------------------------------
- * | tpvue-admin [ 轻量级模块化Vue后台 ]
+ * | vue-admin [ 轻量级模块化Vue后台 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2018-2019 http://tpvue.com All rights reserved.
  * +----------------------------------------------------------------------
@@ -16,11 +16,29 @@ const resolve = dir => {
 
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/' : '/', // 路径
+  outputDir: 'dist', // 输出文件目录
   lintOnSave: false,
   chainWebpack: config => {
     config.resolve.alias
       .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
       .set('@c', resolve('src/components'))
+  },
+  devServer: {
+      open: true,
+      host: '0.0.0.0',
+      port: 8080,
+      https: false,
+      hotOnly: false,
+      proxy: null,
+      disableHostCheck: true,
+      // proxy: {
+      //     '/api': {
+      //         target: '<url>',
+      //         ws: true,
+      //         changOrigin: true
+      //     }
+      // },
+      before: app => {}
   },
   productionSourceMap: false, // 设为false打包时不生成.map文件
   pluginOptions: {

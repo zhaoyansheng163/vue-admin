@@ -9,10 +9,10 @@
  * | Author: jry <598821125@qq.com>
  * +----------------------------------------------------------------------
 */
-
+import util from '@/libs/util';
 export default {
     state: {
-      token: localStorage.token,
+      token: util.getToken(),
       user_info: {
         uid: '',
         nickname: '',
@@ -21,27 +21,22 @@ export default {
       }
     },
     getters: {
-      get_token: state => {
-          return state.token
-      },
-      get_user_info: state => {
-        return state.user_info
-      }
-   },
+    },
     mutations: {
-      set_token:(state,view)=>{
-        state.token = view
+      set_token:(state,data)=>{
+        state.token = data
+        util.setToken(data)
       },
-      set_user_info:(state,view)=>{
-        state.user_info = view
+      set_user_info:(state,data)=>{
+        state.user_info = data
       }
     },
     actions: { 
-      setToken({commit},view){
-        commit('set_token',view)
+      setToken({commit},data){
+        commit('set_token',data)
       },
-      setUserInfo({commit},view){
-        commit('set_user_info',view)
+      setUserInfo({commit},data){
+        commit('set_user_info',data)
       },
     }
   }

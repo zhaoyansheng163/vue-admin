@@ -18,4 +18,14 @@ util.title = function (title) {
     window.document.title = title;
 };
 
+// 获取token
+util.getToken = function () {
+    return localStorage.token
+};
+
+// 存储token
+util.setToken = function (data) {
+    return localStorage.token = data
+};
+
 export default util;
