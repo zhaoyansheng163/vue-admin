@@ -149,7 +149,7 @@
 <script>
     import Layout from '@/views/layout';
     import { mapMutations, mapActions, mapGetters } from 'vuex'
-    import {setTagviewsInLocalstorage, getTagviewsFromLocalstorage} from './store/util.js'
+    import util from './store/util.js'
     export default {
         data () {
             return {
@@ -157,7 +157,11 @@
                 isCollapsed: false
             };
         },
-        beforeMount: function () {
+        beforeCreate: function () {
+            // 首次加载读取之前打开的标签
+            this.$store.dispatch('setVisitedViews')
+            let menu_list = util.getMenulistFromLocalstorage()
+            
             // 获取API接口返回的左侧导航列表
             var routes = [
                 {
@@ -184,8 +188,7 @@
 
             // 获取菜单
             let _this = this;
-            let menu_list = this.$store.state.menu.get_menu_list;
-            if(!menu_list){      
+            if(menu_list.length == 0){
                 axios.get('v1/core/admin/menu/lists')
                     .then(function (res) {
                         res = res.data;
@@ -194,7 +197,6 @@
                             for(let index1 in menu_list) {
                                 if(menu_list[index1]._child){
                                     for(let index2 in menu_list[index1]._child) { 
-                                        console.log(menu_list[index1]._child[index2])
                                         children.push(
                                             {
                                                 path: index2,
@@ -210,7 +212,7 @@
                             }
                             routes[0].children = children
                             _this.$router.addRoutes(routes)
-                            _this.$store.dispatch('setMenuList',menu_list);
+                            _this.$store.dispatch('setMenuList', menu_list);
                         }else{
                         }
                     })
@@ -218,10 +220,6 @@
                         console.log(error);
                     });
             }
-        },
-        mounted:function(){
-            // 首次加载读取之前打开的标签
-            this.$store.dispatch('setVisitedViews');
         },
         computed: {
             ...mapGetters([

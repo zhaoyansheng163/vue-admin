@@ -6,7 +6,7 @@ import axios from "axios";
 import util from '@/libs/util';
 
 // Full config:  https://github.com/axios/axios#request-config
-axios.defaults.headers.common['Authorization'] = 'bearer ' + util.getToken();
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + util.getToken();
 const contentType = 'application/x-www-form-urlencoded'  // application/x-www-form-urlencoded或者application/json
 axios.defaults.headers.post['Content-Type'] = contentType;
 axios.defaults.transformRequest = data => {
@@ -16,8 +16,9 @@ axios.defaults.transformRequest = data => {
       return data
     }
 };
+
 let config = {
-  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'https://ufgacz-80-gyqbmz.dev.ide.live/api/',
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'http://localhost/tpvue/tpvue/public/index.php/api/',
   timeout: 60 * 1000, // Timeout
   withCredentials: false, // Check cross-site Access-Control
 };
@@ -39,6 +40,9 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   function(response) {
     // Do something with response data
+    if(response.data.data.need_login == 1){
+      console.log(Vue)
+    }
     return response;
   },
   function(error) {

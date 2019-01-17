@@ -10,16 +10,18 @@
  * +----------------------------------------------------------------------
 */
 
+let util = {};
+
 /**
  * @description 本地存储和获取标签导航列表
  */
-export const setTagviewsInLocalstorage = list => {
+util.setTagviewsInLocalstorage = list => {
     localStorage.visitedviews = JSON.stringify(list)
 }
 /**
  * @returns {Array} 其中的每个元素只包含路由原信息中的name, path, meta三项
  */
-export const getTagviewsFromLocalstorage = () => {
+util.getTagviewsFromLocalstorage = () => {
     const list = localStorage.visitedviews
     return list ? JSON.parse(list) : [{
             name: 'home',
@@ -28,3 +30,16 @@ export const getTagviewsFromLocalstorage = () => {
         }  
     ]
 }
+
+/**
+ * @description 本地存储和获取左侧导航列表
+ */
+util.setMenulistInLocalstorage = list => {
+    localStorage.menulist = JSON.stringify(list)
+}
+util.getMenulistFromLocalstorage = () => {
+    const list = localStorage.menulist
+    return list ? JSON.parse(list) : []
+}
+
+export default util;

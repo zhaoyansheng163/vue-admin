@@ -16,12 +16,13 @@ import routes from './routers';
 import store from '@/store'
 import iView from 'iview';
 import util from '@/libs/util';
+import util1 from '@/views/layout/store/util';
 
 Vue.use(Router);
 
 const router = new Router({
-  routes,
-  mode: 'history'
+    routes,
+    mode: 'history'
 });
 
 const LOGIN_PAGE_NAME = '/core/user/login'
@@ -35,6 +36,13 @@ router.beforeEach((to, from, next) => {
     })
   }
 
+  // 如果没有存储的左侧导航跳转到首页
+  if (util1.getMenulistFromLocalstorage().length == 0 && to.name !== 'home') {
+    next({
+        name: 'home' // 跳转首页
+    })
+  }
+ 
   //进度条
   iView.LoadingBar.start();
   util.title(to.meta.title);

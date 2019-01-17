@@ -18,6 +18,9 @@ import './plugins/axios'
 import './plugins/iview.js'
 import util from './libs/util';
 
+import TreeTable from 'tree-table-vue'
+Vue.use(TreeTable)
+
 Vue.config.productionTip = false
 
 new Vue({

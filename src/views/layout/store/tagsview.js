@@ -10,7 +10,7 @@
  * +----------------------------------------------------------------------
 */
 
-import {setTagviewsInLocalstorage, getTagviewsFromLocalstorage} from './util.js'
+import util from './util.js'
 export default {
     state: {
         visitedviews:[],//存放所有浏览过的且不重复的路由数据
@@ -29,7 +29,7 @@ export default {
                 path:data.path,
                 title:data.meta.title || '无标题'
             })
-            setTagviewsInLocalstorage([...state.visitedviews])
+            util.setTagviewsInLocalstorage([...state.visitedviews])
         },
         del_visited_views:(state,data)=>{
             //关闭页签--删除路由数据的方法
@@ -39,11 +39,11 @@ export default {
                     break
                 }
             }
-            setTagviewsInLocalstorage([...state.visitedviews])
+            util.setTagviewsInLocalstorage([...state.visitedviews])
         },
         set_visited_views:(state)=>{
             //直接设置打开的标签
-            state.visitedviews = getTagviewsFromLocalstorage();
+            state.visitedviews = util.getTagviewsFromLocalstorage();
         },
      },
      actions: { 

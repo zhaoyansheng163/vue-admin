@@ -9,7 +9,7 @@
  * | Author: jry <598821125@qq.com>
  * +----------------------------------------------------------------------
 */
-
+import util from './util.js'
 export default {
      state: {
         menu_list:[],
@@ -20,15 +20,15 @@ export default {
         }
      },
      mutations: {
-        set_menu_list:(state,view)=>{
-            //直接设置打开的标签
-            state.menu_list = view;
+        set_menu_list:(state,data)=>{
+            state.menu_list = data
+            util.setMenulistInLocalstorage(data)
         },
      },
      actions: { 
-        setMenuList({commit},view){
+        setMenuList({commit},data){
             //通过解构赋值得到commit方法
-            commit('set_menu_list',view)
+            commit('set_menu_list',data)
         }
      }
 }
