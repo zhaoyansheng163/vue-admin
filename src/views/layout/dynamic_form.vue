@@ -1,6 +1,6 @@
 <template>
     <div class="form-wrapper">
-        <Form :ref="ref" :model="data.form_item" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
+        <Form :ref="ref" :model="data.form_rules" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
             <FormItem v-for="(item,key,index) in data.form_item" :key="index" :label="item.title" :prop="item.name">
                 <!-- 文本框 -->
                 <template v-if="item.type == 'text'">

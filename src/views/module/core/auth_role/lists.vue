@@ -43,53 +43,7 @@ export default {
         modal_list: {
             add: {
                 show: false,
-                form_data: {
-                    form_item: [
-                        {
-                            must: false,
-                            name: 'pid',
-                            title: '上级',
-                            type: 'select',
-                            value: '',
-                            options: [
-                                {
-                                    title: '测试',
-                                    value: ''
-                                }
-                            ],
-                            placeholder: '请选择上级',
-                            tip: '选择上级后会限制权限范围不大于上级'
-                        },
-                        {
-                            must: true,
-                            name: 'name',
-                            title: '英文名',
-                            type: 'text',
-                            value: '',
-                            options: [],
-                            placeholder: '请输入英文名',
-                            tip: '英文名其实可以理解为一个系统代号'
-                        },
-                        {
-                            must: true,
-                            name: 'title',
-                            title: '角色名称',
-                            type: 'text',
-                            value: '',
-                            options: [],
-                            placeholder: '请输入角色名称',
-                            tip: '角色名称也可以理解为部门名称'
-                        }
-                    ],
-                    form_rules: {
-                        name: [
-                            {required: true, message: '请填写角色英文名称', trigger: 'change'}
-                        ],
-                        title: [
-                            {required: true, message: '请填写角色名称', trigger: 'change'}
-                        ]
-                    }
-                }
+                form_data: []
             },
             edit: {
                 show: false,
@@ -145,6 +99,19 @@ export default {
     methods: {
         modal_add() {
             this.modal_list.add.show = true
+            let _this = this
+            axios.get('v1/core/admin/auth_role/add')
+                .then(function (res) {
+                    res = res.data
+                    if(res.code=='200'){
+                        _this.modal_list.add.form_data = res.data.form_data
+                    }else{
+                        _this.$Message.error(res.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
         },
         modal_edit(scope) {
         },
