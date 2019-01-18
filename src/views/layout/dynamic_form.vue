@@ -1,18 +1,19 @@
 <template>
     <div class="form-wrapper">
-        <Form :ref="ref" :model="data.form_rules" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
-            <FormItem v-for="(item,key,index) in data.form_item" :key="index" :label="item.title" :prop="item.name">
+        <Divider />
+        <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
+            <FormItem v-for="(item,key,index) in data.form_items" :key="index" :label="item.title" :prop="item.name">
                 <!-- 文本框 -->
                 <template v-if="item.type == 'text'">
-                    <Input v-model="item.value" :placeholder="item.placeholder"></Input>
+                    <Input v-model="data.form_values[item.name]" :placeholder="item.placeholder"></Input>
                 </template>
                 <!-- 多行文本 -->
                 <template v-else-if="item.type == 'textarea'">
-                    <Input v-model="item.value" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.placeholder"></Input>                    
+                    <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.placeholder"></Input>                    
                 </template>
                 <!-- 下拉框 -->
                 <template v-else-if="item.type == 'select'">
-                    <Select v-model="item.value">
+                    <Select v-model="data.form_values[item.name]">
                         <Option v-for="(item1,key1,index1) in item.options" :key="index1" :value="item1.value">
                             {{item1.title}}
                         </Option>
@@ -20,7 +21,7 @@
                 </template>
                 <!-- 单选框 -->
                 <template v-else-if="item.type == 'radio'">
-                    <RadioGroup v-model="item.value">
+                    <RadioGroup v-model="data.form_values[item.name]">
                         <Radio v-for="(item1,key1,index1) in item.options" :key="index1" :label="item1.value">
                             {{item1.title}}
                         </Radio>
@@ -28,53 +29,82 @@
                 </template>
                 <!-- 多选框 -->
                 <template v-else-if="item.type == 'input'">
-                    <CheckboxGroup v-model="item.value">
+                    <CheckboxGroup v-model="data.form_values[item.name]">
                         <Checkbox :label="item1.title"></Checkbox>
                     </CheckboxGroup>
                 </template>
                 <!-- 开关 -->
                 <template v-else-if="item.type == 'switch'">
-                    <i-switch v-model="item.value" size="large">
+                    <i-switch v-model="data.form_values[item.name]" size="large">
                         <span slot="open">{{item1.options[0].title}}</span>
                         <span slot="close">{{item1.options[1].title}}</span>
                     </i-switch>
                 </template>
                 <!-- 滑块 -->
                 <template v-else-if="item.type == 'slider'">
-                    <Slider v-model="item.value" range></Slider>
+                    <Slider v-model="data.form_values[item.name]" range></Slider>
                 </template>
                 <!-- 日期选择 -->
                 <template v-else-if="item.type == 'datepicker'">
-                    <DatePicker type="date" placeholder="选择日期" v-model="item.value"></DatePicker>
+                    <DatePicker type="date" placeholder="选择日期" v-model="idata.form_values[item.name]"></DatePicker>
                 </template>
                 <!-- 时间选择 -->
                 <template v-else-if="item.type == 'timepicker'">
-                    <TimePicker type="time" placeholder="选择时间" v-model="item.value"></TimePicker>
+                    <TimePicker type="time" placeholder="选择时间" v-model="data.form_values[item.name]"></TimePicker>
                 </template>
                 <!-- 日期时间选择 -->
                 <template v-else-if="item.type == 'datetimepicker'">
                     <Row>
                         <Col span="11">
-                            <DatePicker type="date" placeholder="选择日期" v-model="item.value[0]"></DatePicker>
+                            <DatePicker type="date" placeholder="选择日期" v-model="data.form_values[item.name][0]"></DatePicker>
                         </Col>
                         <Col span="2" style="text-align: center">-</Col>
                         <Col span="11">
-                            <TimePicker type="time" placeholder="选择时间" v-model="item.value[1]"></TimePicker>
+                            <TimePicker type="time" placeholder="选择时间" v-model="data.form_values[item.name][1]"></TimePicker>
                         </Col>
                     </Row>
                 </template>
-                <!-- 单图上传 -->
-                <template v-else-if="item.type == 'uploadimage'">
+                <!-- 评分 -->
+                <template v-else-if="item.type == 'rate'">
+                    <Rate v-model="data.form_values[item.name]" />
                 </template>
-                <!-- 多图上传 -->
-                <template v-else-if="item.type == 'uploadimages'">
+                <!-- 级联选择 -->
+                <template v-else-if="item.type == 'cascader'">
+                    <Cascader :data="item.options" v-model="data.form_values[item.name]" size="large"></Cascader>
+                </template>
+                <!-- 颜色选择器 -->
+                <template v-else-if="item.type == 'colorpicker'">
+                    <ColorPicker v-model="data.form_values[item.name]" />
+                </template>
+                <!-- 单文件上传 -->
+                <template v-else-if="item.type == 'uploadfile'">
+                    <Upload
+                        type="drag"
+                        :action="item.action">
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="42" style="color: #3399ff"></Icon>
+                            <p>点击或者拖动文件到此处上传</p>
+                        </div>
+                    </Upload>
+                </template>
+                <!-- 多文件上传 -->
+                <template v-else-if="item.type == 'uploadfiles'">
+                    <Upload
+                        multiple
+                        type="drag"
+                        :action="item.action">
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="42" style="color: #3399ff"></Icon>
+                            <p>点击或者拖动文件到此处上传</p>
+                        </div>
+                    </Upload>
                 </template>
             </FormItem>
             <!-- 按钮 -->
             <Divider />
             <FormItem style="text-align:right">
-                <Button type="text" @click="handleReset(ref)">取消操作</Button>
-                <Button type="primary" style="margin-left: 15px" @click="handleSubmit(ref)">确认提交</Button>
+                <Button type="text" size="large" @click="handleReset(ref)">取消操作</Button>
+                <Button type="primary" size="large" style="margin-left: 15px" @click="handleSubmit(ref)">确认提交</Button>
             </FormItem>
         </Form>
     </div>
@@ -84,18 +114,33 @@
 export default {
   name: 'DynamicForm',
   props: {
-    label: {},
-    data: {},
-    rules: {}
+    api: ''
   },
   data () {
     return {
         ref: 'form', //相当于子组件实例ID
+        data: {},
         label_position: 'right',
         label_width: 100
     }
   },
+  created() {
+  },
   mounted () {
+    let _this = this
+    // 获取表单构造数据
+    axios.get(this.api)
+        .then(function (res) {
+            res = res.data
+            if(res.code=='200'){
+                _this.data = res.data.form_data
+            }else{
+                _this.$Message.error(res.msg)
+            }
+        })
+        .catch(function (error) {
+            console.log(error)
+        });
   },
   computed: {
   },
@@ -103,14 +148,27 @@ export default {
       handleSubmit (name) {
         this.$refs[name].validate((valid) => {
             if (valid) {
-                this.$Message.success('Success!');
+                // 提交数据
+                axios.post(this.api, this.data.form_values)
+                    .then(function (res) {
+                        res = res.data
+                        if(res.code=='200'){
+                            _this.$Message.success(res.msg)
+                        }else{
+                            _this.$Message.error(res.msg)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
             } else {
-                this.$Message.error('Fail!');
+                //this.$Message.error('错误!')
             }
         })
     },
     handleReset (name) {
-        this.$refs[name].resetFields();
+        this.$refs[name].resetFields()
+        this.$Modal.remove()
     }
   },
   watch: {
