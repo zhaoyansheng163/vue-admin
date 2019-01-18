@@ -41,7 +41,7 @@ _axios.interceptors.response.use(
   function(response) {
     // Do something with response data
     if(response.data.data.need_login == 1){
-      console.log(Vue)
+      //console.log(Vue)
     }
     return response;
   },

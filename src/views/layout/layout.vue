@@ -98,7 +98,6 @@
 <template>
     <div class="layout">
         <Layout :style="{height: '100vh'}">
-            
             <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
                 <Menu :open-names="['0']" active-name="activeLeft" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
                     <template v-for="(item1,key1,index1) in this.get_menu_list">
@@ -144,6 +143,7 @@
                 </Content>
             </Layout>
         </Layout>
+        <BackTop></BackTop>
     </div>
 </template>
 <script>
