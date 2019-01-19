@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import DynamicForm from '@/views/layout/dynamic_form'
+import VaDyform from '@/views/components/va_dypage/va_dyform'
 export default {
     name: 'tree_table_page',
     components: {
-        DynamicForm
+        VaDyform
     },
     data () {
         return {
@@ -75,7 +75,7 @@ export default {
                 title: '添加角色',
                 iconName: 'ios-create-outline',
                 render: (h) => {
-                    return h(DynamicForm, {
+                    return h(VaDyform, {
                         props: {
                             api: _this.form_api.add
                         },
@@ -93,7 +93,7 @@ export default {
                 title: '修改角色',
                 iconName: 'ios-create-outline',
                 render: (h) => {
-                    return h(DynamicForm, {
+                    return h(VaDyform, {
                         props: {
                             api: _this.form_api.edit + '/' + scope.row.id
                         },
