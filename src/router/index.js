@@ -37,7 +37,7 @@ router.beforeEach((to, from, next) => {
   }
 
   // 如果没有存储的左侧导航跳转到首页
-  if (util1.getMenulistFromLocalstorage().length == 0 && to.name !== 'home') {
+  if (util1.getMenulistFromLocalstorage().length == 0 && to.name !== 'home' && to.name !== LOGIN_PAGE_NAME) {
     next({
         name: 'home' // 跳转首页
     })
