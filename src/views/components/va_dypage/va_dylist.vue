@@ -4,10 +4,10 @@
       <Button
         v-for="(item,key) in dynamic_data.top_button_list"
         :key="key"
-        :type="item.type"
-        :size="item.size"
-        :icon="item.icon"
-        :shape="item.shape"
+        :type="item.type?item.type:'default'"
+        :size="item.size?item.size:''"
+        :icon="item.icon?item.icon:''"
+        :shape="item.shape?item.shape:''"
         @click="top_button_modal(key)"
         style="margin-bottom: 15px;">
         {{item.title}}
@@ -55,23 +55,27 @@ export default {
             dynamic_data: {}
         }
     },
+    watch: {
+        api(val) {
+            let _this = this
+            axios.get(this.api)
+                .then(function (res) {
+                    res = res.data
+                    if(res.code=='200'){
+                        _this.dynamic_data = res.data.dynamic_data
+                        _this.data_list = res.data.data_list
+                    }else{
+                        _this.$Message.error(res.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        }
+    },
     created() {
     },
     mounted(){
-        let _this = this
-        axios.get(this.api)
-            .then(function (res) {
-                res = res.data
-                if(res.code=='200'){
-                    _this.dynamic_data = res.data.dynamic_data
-                    _this.data_list = res.data.data_list
-                }else{
-                    _this.$Message.error(res.msg)
-                }
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
     },
     methods: {
         top_button_modal(key) {

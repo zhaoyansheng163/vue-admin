@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VaDylist :api="$route.params.api"></VaDylist>
+    <VaDylist :api="api"></VaDylist>
   </div>
 </template>
 
@@ -10,6 +10,21 @@ export default {
     name: 'va_dylist_route',
     components: {
         VaDylist
+    },
+    data () {
+        return {
+            api: ''
+        };
+    },
+    created: function(){
+    },
+    mounted: function(){
+        this.api = this.$route.meta.api
+    },
+    watch: {
+        $route(){
+            this.api = this.$route.meta.api
+        },
     }
 }
 </script>

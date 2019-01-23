@@ -38,8 +38,7 @@ var routers = [
             path: '/va_dylist/:api',
             name: 'va_dylist',
             meta: {
-              title: route => route.meta.title,
-              notCache: true
+              title: '动态页面'
             },
             component: () => import('@/views/components/va_dypage/va_dylist_route.vue')
           }
@@ -54,7 +53,22 @@ if (typeof menu_list === 'object') {
     for(let index1 in menu_list) {
         if(menu_list[index1]._child){
             for(let index2 in menu_list[index1]._child) {
-                if(menu_list[index1]._child[index2].path){
+                if(menu_list[index1]._child[index2].is_vadypage == '1'){
+                    children.push(
+                        {
+                            path: menu_list[index1]._child[index2].path,
+                            name: menu_list[index1]._child[index2].path,
+                            meta: {
+                                title: menu_list[index1]._child[index2].title,
+                                api: menu_list[index1]._child[index2].api
+                            },
+                            query: {
+                                api: menu_list[index1]._child[index2].api
+                            },
+                            component: () => import('@/views/components/va_dypage/va_dylist_route.vue')
+                        }
+                    )
+                } else {
                     children.push(
                         {
                             path: menu_list[index1]._child[index2].path,
@@ -70,7 +84,6 @@ if (typeof menu_list === 'object') {
         }
     }
     routers[0].children = routers[0].children.concat(children)
-    //router.addRoutes(routes)
 }
 
 // 导入tpvue核心模块路由
