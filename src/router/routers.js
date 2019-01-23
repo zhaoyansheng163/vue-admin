@@ -33,7 +33,16 @@ var routers = [
             title: '首页'
           },
           component: () => import('@/views/index.vue')
-        }
+        },
+        {
+            path: '/va_dylist/:api',
+            name: 'va_dylist',
+            meta: {
+              title: route => route.meta.title,
+              notCache: true
+            },
+            component: () => import('@/views/components/va_dypage/va_dylist_route.vue')
+          }
       ]
     }
 ];
@@ -44,17 +53,19 @@ if (typeof menu_list === 'object') {
     store.dispatch('setMenuList', menu_list);
     for(let index1 in menu_list) {
         if(menu_list[index1]._child){
-            for(let index2 in menu_list[index1]._child) { 
-                children.push(
-                    {
-                        path: index2,
-                        name: index2,
-                        meta: {
-                            title: menu_list[index1]._child[index2].title
-                        },
-                        component: () => import('@/views/module'+index2+'.vue')
-                    }
-                )
+            for(let index2 in menu_list[index1]._child) {
+                if(menu_list[index1]._child[index2].path){
+                    children.push(
+                        {
+                            path: menu_list[index1]._child[index2].path,
+                            name: menu_list[index1]._child[index2].path,
+                            meta: {
+                                title: menu_list[index1]._child[index2].title
+                            },
+                            component: () => import('@/views/module'+menu_list[index1]._child[index2].path+'.vue')
+                        }
+                    )
+                }
             }
         }
     }

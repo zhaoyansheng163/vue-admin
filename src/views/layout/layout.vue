@@ -101,18 +101,21 @@
             <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
                 <Menu :open-names="['0']" active-name="activeLeft" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
                     <template v-for="(item1,key1,index1) in this.get_menu_list">
-                        <Submenu v-if="item1.level == '1'" :name="index1" :key="item1.name">
+                        <Submenu v-if="item1.level == '1'" :name="index1" :key="item1.path">
                             <template slot="title">
                                 <Icon type="ios-filing" />
                                 {{item1.title}}
                             </template>
                             <template v-if="item1._child">
                                 <template v-for="(item2,key2,index2) in item1._child">
-                                    <Submenu v-if="item2._child" :key="item2.name" name="">
+                                    <Submenu v-if="item2._child" :key="item2.name" :name="item1.name + '-' +item2.name">
                                         <template slot="title">{{item2.title}}</template>
-                                        <MenuItem :key="item3.name" v-for="(item3,key3,index3) in item2._child" :to="item3.route" :name="index1 + '-' +index2 + '-' +index3">{{item3.title}}</MenuItem>
+                                        <MenuItem :key="item3.path" v-for="(item3,key3,index3) in item2._child" :to="item3.path" :name="index1 + '-' +index2 + '-' +index3">{{item3.title}}</MenuItem>
                                     </Submenu>
-                                    <MenuItem v-else :key="item2.name" :to="key2" :name="index1 + '-' +index2">{{item2.title}}</MenuItem>
+                                    <template v-else>
+                                        <MenuItem v-if="item2.is_vadypage == '1'" :key="item2.name" @click.native="addDypageView(item2)" :name="index1 + '-' +index2">{{item2.title}}</MenuItem>
+                                        <MenuItem v-else :key="item2.path" :to="item2.path" :name="index1 + '-' +index2">{{item2.title}}</MenuItem>
+                                    </template>
                                 </template>
                             </template>
                         </Submenu>
@@ -196,17 +199,19 @@
                             menu_list = res.data.menu_list;
                             for(let index1 in menu_list) {
                                 if(menu_list[index1]._child){
-                                    for(let index2 in menu_list[index1]._child) { 
-                                        children.push(
-                                            {
-                                                path: index2,
-                                                name: index2,
-                                                meta: {
-                                                    title: menu_list[index1]._child[index2].title
-                                                },
-                                                component: () => import('@/views/module'+index2+'.vue')
-                                            }
-                                        )
+                                    for(let index2 in menu_list[index1]._child) {
+                                        if(menu_list[index1]._child[index2].path){
+                                            children.push(
+                                                {
+                                                    path: menu_list[index1]._child[index2].path,
+                                                    name: menu_list[index1]._child[index2].path,
+                                                    meta: {
+                                                        title: menu_list[index1]._child[index2].title
+                                                    },
+                                                    component: () => import('@/views/module'+menu_list[index1]._child[index2].path+'.vue')
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -270,6 +275,19 @@
                         }
                     }
                 })
+            },
+            //增加动态页面
+            addDypageView(item){
+                const route = {
+                    name: 'va_dylist',
+                    params: {
+                        api: item.api
+                    },
+                    meta: {
+                        title: '动态路由' + item.title
+                    }
+                }
+                this.$router.push(route)
             }
         },
         watch:{
