@@ -146,14 +146,16 @@ export default {
   },
   methods: {
       handleSubmit (name) {
+        let _this = this
         this.$refs[name].validate((valid) => {
             if (valid) {
                 // 提交数据
                 axios.post(this.api, this.data.form_values)
                     .then(function (res) {
                         res = res.data
-                        if(res.code=='200'){
+                        if(res.code == '200'){
                             _this.$Message.success(res.msg)
+                            _this.$Modal.remove()
                         }else{
                             _this.$Message.error(res.msg)
                         }
