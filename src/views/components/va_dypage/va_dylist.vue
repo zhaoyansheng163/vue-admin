@@ -82,14 +82,14 @@ export default {
             let _this = this
             let button_data = _this.dynamic_data.top_button_list[key]
             this.$Modal.success({
-                width: button_data.width?button_data.width:600,
+                width: button_data.modal_data.width?button_data.modal_data.width:600,
                 scrollable: true,
-                title: button_data.title?button_data.title:'未指定标题',
+                title: button_data.modal_data.title?button_data.modal_data.title:'未指定标题',
                 iconName: 'ios-create-outline',
                 render: (h) => {
                     return h(VaDyform, {
                         props: {
-                            api: button_data.api
+                            api: button_data.modal_data.api
                         },
                         on: {
                         }
@@ -100,14 +100,14 @@ export default {
         right_button_modal(key,scope) {
             let _this = this
             let button_data = _this.dynamic_data.right_button_list[key]
-            if(button_data.modalType == 'confirm'){
+            if(button_data.modal_data.type == 'confirm'){
                 this.$Modal.confirm({
-                    okText: button_data.okText,
-                    cancelText: button_data.cancelText,
-                    title: button_data.modalTitle,
-                    content: button_data.content,
+                    okText: button_data.modal_data.okText,
+                    cancelText: button_data.modal_data.cancelText,
+                    title: button_data.modal_data.title,
+                    content: button_data.modal_data.content,
                     onOk: () => {
-                        axios.delete(button_data.api + '/' + scope.row.id)
+                        axios.delete(button_data.modal_data.api + '/' + scope.row.id)
                             .then(function (res) {
                                 res = res.data
                                 if(res.code=='200'){
@@ -125,13 +125,13 @@ export default {
                 });
             } else {
                 this.$Modal.warning({
-                    width: button_data.width?button_data.width:600,
+                    width: button_data.modal_data.width?button_data.modal_data.width:600,
                     scrollable: true,
-                    title: button_data.modalTitle?button_data.modalTitle:'未指定标题',
+                    title: button_data.modal_data.title?button_data.modal_data.title:'未指定标题',
                     render: (h) => {
                         return h(VaDyform, {
                             props: {
-                                api: button_data.api + '/' + scope.row.id
+                                api: button_data.modal_data.api + '/' + scope.row.id
                             },
                             on: {
                             }
