@@ -1,4 +1,4 @@
-# apptool
+# initadmin/vue-admin
 
 ## Project setup
 ```

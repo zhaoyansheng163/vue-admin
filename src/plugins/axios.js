@@ -18,7 +18,7 @@ axios.defaults.transformRequest = data => {
 };
 
 let config = {
-  baseURL: process.env.NODE_ENV === 'production' ? 'https://tpvue.com/api/' : 'http://localhost/tpvue/tpvue/public/index.php/api/',
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://api.initadmin.net/' : 'http://localhost/InitAdmin/actionphp/public/index.php/api/',
   timeout: 60 * 1000, // Timeout
   withCredentials: false, // Check cross-site Access-Control
 };

@@ -9,55 +9,72 @@
  * | Author: jry <598821125@qq.com>
  * +----------------------------------------------------------------------
 */
-<style scoped>
+<style scoped lang="less">
+    @import '../../plugins/iview-variables.less';
     .layout{
         border: 0px solid #d7dde4;
         background: #f5f7f9;
         position: relative;
         border-radius: 0px;
         overflow: hidden;
-    }
-    .layout-header-bar{
-        background: #fff;
-        box-shadow: 0 1px 1px rgba(0,0,0,.1);
-    }
-    .layout-logo-left{
-        width: 90%;
-        height: 30px;
-        background: #5b6270;
-        border-radius: 3px;
-        margin: 15px auto;
-    }
-    .menu-icon{
-        transition: all .3s;
-    }
-    .rotate-icon{
-        transform: rotate(-90deg);
-    }
-    .menu-item span{
-        display: inline-block;
-        overflow: hidden;
-        width: 69px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        vertical-align: bottom;
-        transition: width .2s ease .2s;
-    }
-    .menu-item i{
-        transform: translateX(0px);
-        transition: font-size .2s ease, transform .2s ease;
-        vertical-align: middle;
-        font-size: 16px;
-    }
-    .collapsed-menu span{
-        width: 0px;
-        transition: width .2s ease;
-    }
-    .collapsed-menu i{
-        transform: translateX(5px);
-        transition: font-size .2s ease .2s, transform .2s ease .2s;
-        vertical-align: middle;
-        font-size: 22px;
+        .logo-box{
+            background: #363e4f;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            .logo{
+                height: 42px;
+                margin-right: 8px;
+            }
+            .title{
+                font-weight: 400;
+                font-size: 16px;
+            }
+        }
+        .layout-header-bar{
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            box-shadow: 0 1px 1px rgba(0,0,0,.1);
+            padding-right: 20px;
+            .menu-icon{
+                transition: all .3s;
+            }
+            .rotate-icon{
+                transform: rotate(-90deg);
+            }
+            .right {
+                display: flex;
+                align-items: center;
+            }
+        }
+        .menu-item span{
+            display: inline-block;
+            overflow: hidden;
+            width: 69px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: bottom;
+            transition: width .2s ease .2s;
+        }
+        .menu-item i{
+            transform: translateX(0px);
+            transition: font-size .2s ease, transform .2s ease;
+            vertical-align: middle;
+            font-size: 16px;
+        }
+        .collapsed-menu span{
+            width: 0px;
+            transition: width .2s ease;
+        }
+        .collapsed-menu i{
+            transform: translateX(5px);
+            transition: font-size .2s ease .2s, transform .2s ease .2s;
+            vertical-align: middle;
+            font-size: 22px;
+        }
     }
 
     /* 多标签样式 */
@@ -74,32 +91,38 @@
         color: #515a6e!important;
         background: #fff!important;
         padding: 0 12px;
-    }
-    .tags-view-item .title {
-        display: inline-block;
-        font-size: 13px;
-    }
-    .tags-view-item .dot{
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        background-color: #e8eaec;
-        border-radius: 50%;
-        margin: 0px 6px 0px 4px;
-    }
-    .tags-view-item.active .dot{
-        background-color: #2d8cf0;
-    }
-    .close-tag {
-        font-size: 22px;
-        margin-top: -5px;
+        .title {
+            display: inline-block;
+            font-size: 13px;
+        }
+        .dot{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #e8eaec;
+            border-radius: 50%;
+            margin: 0px 6px 0px 4px;
+        }
+        &.active .dot{
+            background-color: @primary-color;
+        }
+        .close-tag {
+            font-size: 22px;
+            margin-top: -5px;
+        }
     }
 </style>
 <template>
     <div class="layout">
         <Layout :style="{height: '100vh'}">
             <Sider :style="{overflow: 'hidden', overflow: 'auto'}" breakpoint="md" ref="side1" hide-trigger reakpoint="md" collapsible :collapsed-width="78" v-model="isCollapsed">
-                <Menu :open-names="['0']" active-name="activeLeft" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
+                <div >
+                    <router-link class="logo-box" to="/home">
+                        <img class="logo" src="@/assets/logo.png" alt="InitAdmin">
+                        <div class="title">InitAdmin</div>
+                    </router-link>
+                </div>
+                <Menu :open-names="[0]" active-name="activeLeft" mode="vertical" theme="dark" width="auto" class="left-menu" :class="menuitemClasses">
                     <template v-for="(item1,key1) in this.get_menu_list">
                         <Submenu v-if="item1.level == '1'" :name="key1" :key="item1.path">
                             <template slot="title">
@@ -123,7 +146,43 @@
             </Sider>
             <Layout >
                 <Header :style="{width: '100%', paddingLeft: '20px'}" class="layout-header-bar">
-                    <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0px', cursor: 'pointer'}" type="md-menu" size="24"></Icon>
+                    <div class="left">
+                        <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0px', cursor: 'pointer'}" type="md-menu" size="24"></Icon>
+                    </div>
+                    <div class="right">
+                        <div>
+                            <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+                        </div>
+                        <Dropdown style="margin-right: 15px;">
+                            <a href="javascript:void(0)" style="font-size: 14px;">
+                                访问前台
+                                <Icon type="md-arrow-dropdown" style="font-size: 18px;"></Icon>
+                            </a>
+                            <DropdownMenu slot="list">
+                                <DropdownItem>
+                                    <a target="_blank" href="/">PC前台</a>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <a target="_blank" href="/m">Wap前台</a>
+                                </DropdownItem>
+                                <DropdownItem>微信小程序</DropdownItem>
+                                <DropdownItem>手机App</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Dropdown>
+                            <a href="javascript:void(0)" style="font-size: 14px;">
+                                <Badge>
+                                    <Avatar shape="circle" size="large" icon="ios-person" />
+                                </Badge>
+                                <Icon type="md-arrow-dropdown" style="font-size: 18px;"></Icon>
+                            </a>
+                            <DropdownMenu slot="list">
+                                <DropdownItem>我的消息</DropdownItem>
+                                <DropdownItem>修改密码</DropdownItem>
+                                <DropdownItem divided>注销</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
                 </Header>
                 <Content class="main-content-con" :style="{height: 'calc(100% - 60px)', overflow: 'hidden'}">
                     <Layout class="main-layout-con" :style="{height: '100%'}">
@@ -150,13 +209,18 @@
 </template>
 <script>
     import Layout from '@/views/layout';
+    import Fullscreen from './fullscreen'
     import { mapMutations, mapActions, mapGetters } from 'vuex'
     import util from './store/util.js'
     export default {
+        components: {
+            Fullscreen
+        },
         data () {
             return {
-                activeLeft: '0-1',
-                isCollapsed: false
+                activeLeft: '0-0',
+                isCollapsed: false,
+                isFullscreen: false
             };
         },
         beforeCreate: function () {
