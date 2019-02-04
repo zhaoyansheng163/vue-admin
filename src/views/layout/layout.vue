@@ -77,38 +77,81 @@
         }
     }
 
-    /* 多标签样式 */
-    .tags-view-item {
-        display: inline-block;
-        margin: 2px 4px 2px 0;
-        font-size: 12px;
-        vertical-align: middle;
-        opacity: 1;
-        overflow: hidden;
-        cursor: pointer;
-        line-height: 32px;
-        border: 1px solid #e8eaec!important;
-        color: #515a6e!important;
-        background: #fff!important;
-        padding: 0 12px;
-        .title {
-            display: inline-block;
-            font-size: 13px;
-        }
-        .dot{
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background-color: #e8eaec;
-            border-radius: 50%;
-            margin: 0px 6px 0px 4px;
-        }
-        &.active .dot{
-            background-color: @primary-color;
-        }
-        .close-tag {
-            font-size: 22px;
-            margin-top: -5px;
+    .main-layout-con {
+        /* 多标签样式 */
+        .tag-nav-wrapper {
+            position: relative;
+            height: 40px;
+            white-space: nowrap;
+            background-color: #f0f0f0;
+            .btn-con{
+                position: absolute;
+                top: 0px;
+                height: 100%;
+                background: #fff;
+                padding-top: 3px;
+                z-index: 10;
+                button{
+                    padding: 6px 4px;
+                    line-height: 14px;
+                    text-align: center;
+                }
+                &.left-btn{
+                    left: 0px;
+                }
+                &.right-btn{
+                    right: 32px;
+                    border-right: 1px solid #F0F0F0;
+                }
+            }
+            .close-con{
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 100%;
+                width: 32px;
+                background: #fff;
+                text-align: center;
+                z-index: 10;
+            }
+            .tags-view-wrapper {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                .tags-view-item {
+                    display: inline-block;
+                    margin: 2px 4px 2px 0;
+                    font-size: 12px;
+                    vertical-align: middle;
+                    opacity: 1;
+                    overflow: hidden;
+                    cursor: pointer;
+                    line-height: 32px;
+                    border: 1px solid #e8eaec!important;
+                    color: #515a6e!important;
+                    background: #fff!important;
+                    padding: 0 12px;
+                    .title {
+                        display: inline-block;
+                        font-size: 13px;
+                    }
+                    .dot{
+                        display: inline-block;
+                        width: 10px;
+                        height: 10px;
+                        background-color: #e8eaec;
+                        border-radius: 50%;
+                        margin: 0px 6px 0px 4px;
+                    }
+                    &.active .dot{
+                        background-color: @primary-color;
+                    }
+                    .close-tag {
+                        font-size: 22px;
+                        margin-top: -5px;
+                    }
+                }
+            }
         }
     }
 </style>
@@ -186,13 +229,36 @@
                 </Header>
                 <Content class="main-content-con" :style="{height: 'calc(100% - 60px)', overflow: 'hidden'}">
                     <Layout class="main-layout-con" :style="{height: '100%'}">
-                        <Content class="tag-nav-wrapper" :style="{ height: '40px', backgroundColor: '#f0f0f0'}">
-                            <div class="tags-view-wrapper">
-                                <router-link class="tags-view-item" :to="item" :key="item.path" :class="isActive(item)?'active':''" v-for="(item) in Array.from(this.get_visitedviews)">
-                                    <span class="dot"></span>
-                                    <span class="title">{{item.title}}</span>
-                                    <Icon v-if="item.name != 'home'" class="close-tag" type="ios-close" @click.prevent.stop='delSelectTag(item)'/>
-                                </router-link>
+                        <Content class="tag-nav-wrapper">
+                            <div class="btn-con left-btn">
+                                <Button type="text" @click="handleScroll(80)">
+                                    <Icon :size="18" type="ios-arrow-back" />
+                                </Button>
+                            </div>
+                            <div class="btn-con right-btn">
+                                <Button type="text" @click="handleScroll(-80)">
+                                    <Icon :size="18" type="ios-arrow-forward" />
+                                </Button>
+                            </div>
+                            <div class="close-con">
+                                <Dropdown transfer @on-click="handleTagsOption" style="margin-top:7px;">
+                                    <Button size="small" type="text">
+                                        <Icon :size="18" type="ios-close-circle-outline" />
+                                    </Button>
+                                    <DropdownMenu>
+                                        <DropdownItem name="close-all">关闭所有</DropdownItem>
+                                        <DropdownItem name="close-others">关闭其他</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+                                </div>
+                            <div class="tags-view-wrapper" :style="{left: tagsleft+'px'}">
+                                <div style="white-space: nowrap;overflow: visible;transition: left .3s ease;">
+                                    <router-link class="tags-view-item" :to="item" :key="item.path" :class="isActive(item)?'active':''" v-for="(item) in Array.from(this.get_visitedviews)">
+                                        <span class="dot"></span>
+                                        <span class="title">{{item.title}}</span>
+                                        <Icon v-if="item.name != 'home'" class="close-tag" type="ios-close" @click.prevent.stop='delSelectTag(item)'/>
+                                    </router-link>
+                                </div>
                             </div>
                         </Content>
                         <Content class="content-wrapper" :style="{height: 'calc(100%)', overflow: 'auto', padding: '15px'}">
@@ -220,7 +286,8 @@
             return {
                 activeLeft: '0-0',
                 isCollapsed: false,
-                isFullscreen: false
+                isFullscreen: false,
+                tagsleft: '28'
             };
         },
         beforeCreate: function () {
@@ -350,7 +417,24 @@
                         }
                     }
                 })
-            }
+            },
+
+            //多标签滚动
+            handleScroll (e) {
+                let left = Number(this.tagsleft) + Number(e)
+                if (left >= 28) {
+                    this.tagsleft = 28
+                } else {
+                    this.tagsleft = left
+                }
+            },
+            handleTagsOption (type) {
+                if (type.includes('all')) {
+                    // 关闭所有，除了home
+                } else if (type.includes('others')) {
+                    // 关闭除当前页和home页的其他页
+                }
+            },
         },
         watch:{
             //地址栏变化了就触发这个添加方法
