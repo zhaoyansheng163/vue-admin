@@ -45,6 +45,7 @@ export default {
             //直接设置打开的标签
             if (data) {
                 state.visitedviews = data
+                util.setTagviewsInLocalstorage([...state.visitedviews])
             } else {
                 state.visitedviews = util.getTagviewsFromLocalstorage()
             }
@@ -54,7 +55,7 @@ export default {
         //调用这里去触发mutations，如何调用？在组件内使用this.$store.dispatch('action中对应名字', 参数)
         addVisitedViews({commit}, data){
             //通过解构赋值得到commit方法
-            commit('add_visited_views',data)//去触发ADD_VISITED_VIEWS，并传入参数
+            commit('add_visited_views', data)//去触发ADD_VISITED_VIEWS，并传入参数
         },
         delVisitedViews({commit, state}, data){
             //删除数组存放的路由之后，需要再去刷新路由，这是一个异步的过程，需要有回掉函数，

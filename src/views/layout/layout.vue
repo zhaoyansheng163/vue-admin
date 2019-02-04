@@ -230,13 +230,13 @@
                                 </Button>
                             </div>
                             <div class="close-con">
-                                <Dropdown transfer @on-click="handleTagsOption" style="margin-top:7px;">
+                                <Dropdown transfer style="margin-top:7px;">
                                     <Button size="small" type="text">
                                         <Icon :size="18" type="ios-close-circle-outline" />
                                     </Button>
                                     <DropdownMenu slot="list">
-                                        <DropdownItem name="close-all">关闭所有</DropdownItem>
-                                        <DropdownItem name="close-others">关闭其他</DropdownItem>
+                                        <DropdownItem @click.native="closeAll" name="close-all">关闭所有</DropdownItem>
+                                        <DropdownItem @click.native="closeOthers" name="close-others">关闭其他</DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
                                 </div>
@@ -417,19 +417,31 @@
                     this.tagsleft = left
                 }
             },
-            handleTagsOption (type) {
-                if (type.includes('all')) {
-                    // 关闭所有，除了home
-                    let views = [{
-                        name: 'home',
-                        path: '/home',
-                        title: '首页'
-                    }]
-                    this.$store.dispatch('setVisitedViews', views)
-                } else if (type.includes('others')) {
-                    // 关闭除当前页和home页的其他页
-                }
+            // 关闭所有
+            closeAll () {
+                let views = [{
+                    name: 'home',
+                    path: '/home',
+                    title: '首页'
+                }]
+                this.$store.dispatch('setVisitedViews', views)
+                this.$router.push('/home')
             },
+            // 关闭除首页和当前页面的其它页面
+            closeOthers () {
+                let views = [{
+                    name: 'home',
+                    path: '/home',
+                    title: '首页'
+                },
+                {
+                    name: this.$route.meta.name,
+                    path: this.$route.meta.path,
+                    title: this.$route.meta.title
+                }]
+                this.$store.dispatch('setVisitedViews', views)
+                this.$router.push(this.$route.meta.name)
+            }
         },
         watch:{
             //地址栏变化了就触发这个添加方法
