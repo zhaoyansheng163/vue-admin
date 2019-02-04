@@ -1,14 +1,15 @@
 /**
  * +----------------------------------------------------------------------
- * | tpvue-admin [ 轻量级模块化Vue后台 ]
+ * | InitAdmin/vue-admin [ InitAdmin渐进式模块化通用后台 ]
  * +----------------------------------------------------------------------
- * | Copyright (c) 2018-2019 http://tpvue.com All rights reserved.
+ * | Copyright (c) 2018-2019 http://initadmin.net All rights reserved.
  * +----------------------------------------------------------------------
  * | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
  * +----------------------------------------------------------------------
- * | Author: jry <598821125@qq.com>
+ * | Author: jry <ijry@qq.com>
  * +----------------------------------------------------------------------
 */
+
 import util from './util.js'
 export default {
      state: {

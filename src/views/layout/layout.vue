@@ -1,14 +1,3 @@
-/**
- * +----------------------------------------------------------------------
- * | tpvue-admin [ 轻量级模块化Vue后台 ]
- * +----------------------------------------------------------------------
- * | Copyright (c) 2018-2019 http://tpvue.com All rights reserved.
- * +----------------------------------------------------------------------
- * | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
- * +----------------------------------------------------------------------
- * | Author: jry <598821125@qq.com>
- * +----------------------------------------------------------------------
-*/
 <style scoped lang="less">
     @import '../../plugins/iview-variables.less';
     .layout{
@@ -231,12 +220,12 @@
                     <Layout class="main-layout-con" :style="{height: '100%'}">
                         <Content class="tag-nav-wrapper">
                             <div class="btn-con left-btn">
-                                <Button type="text" @click="handleScroll(80)">
+                                <Button type="text" @click="handleScroll(120)">
                                     <Icon :size="18" type="ios-arrow-back" />
                                 </Button>
                             </div>
                             <div class="btn-con right-btn">
-                                <Button type="text" @click="handleScroll(-80)">
+                                <Button type="text" @click="handleScroll(-120)">
                                     <Icon :size="18" type="ios-arrow-forward" />
                                 </Button>
                             </div>
@@ -245,7 +234,7 @@
                                     <Button size="small" type="text">
                                         <Icon :size="18" type="ios-close-circle-outline" />
                                     </Button>
-                                    <DropdownMenu>
+                                    <DropdownMenu slot="list">
                                         <DropdownItem name="close-all">关闭所有</DropdownItem>
                                         <DropdownItem name="close-others">关闭其他</DropdownItem>
                                     </DropdownMenu>
@@ -431,6 +420,12 @@
             handleTagsOption (type) {
                 if (type.includes('all')) {
                     // 关闭所有，除了home
+                    let views = [{
+                        name: 'home',
+                        path: '/home',
+                        title: '首页'
+                    }]
+                    this.$store.dispatch('setVisitedViews', views)
                 } else if (type.includes('others')) {
                     // 关闭除当前页和home页的其他页
                 }

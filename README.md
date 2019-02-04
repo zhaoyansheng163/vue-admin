@@ -1,4 +1,4 @@
-# initadmin/vue-admin
+# InitAdmin/vue-admin
 
 ## Project setup
 ```
