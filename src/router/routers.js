@@ -46,41 +46,34 @@ var routers = [
     }
 ];
 
-let menu_list = util1.getMenulistFromLocalstorage()
-if (typeof menu_list === 'object') {
+let menu_data = util1.getMenulistFromLocalstorage()
+if (typeof menu_data === 'object') {
     var children = [];
-    store.dispatch('setMenuList', menu_list);
-    for(let index1 in menu_list) {
-        if(menu_list[index1]._child){
-            for(let index2 in menu_list[index1]._child) {
-                if(menu_list[index1]._child[index2].is_vadypage == '1'){
-                    children.push(
-                        {
-                            path: menu_list[index1]._child[index2].path,
-                            name: menu_list[index1]._child[index2].path,
-                            meta: {
-                                title: menu_list[index1]._child[index2].title,
-                                api: menu_list[index1]._child[index2].api
-                            },
-                            query: {
-                                api: menu_list[index1]._child[index2].api
-                            },
-                            component: () => import('@/views/components/va_dypage/va_dylist_route.vue')
-                        }
-                    )
-                } else {
-                    children.push(
-                        {
-                            path: menu_list[index1]._child[index2].path,
-                            name: menu_list[index1]._child[index2].path,
-                            meta: {
-                                title: menu_list[index1]._child[index2].title
-                            },
-                            component: () => import('@/views/module'+menu_list[index1]._child[index2].path+'.vue')
-                        }
-                    )
+    store.dispatch('setMenuList', menu_data);
+    for(let item in menu_data.menu_list) {
+        if(menu_data.menu_list[item].is_vadypage == '1'){
+            children.push(
+                {
+                    path: menu_data.menu_list[item].path,
+                    name: menu_data.menu_list[item].path,
+                    meta: {
+                        title: menu_data.menu_list[item].title,
+                        api: menu_data.menu_list[item].api
+                    },
+                    component: () => import('@/views/components/va_dypage/va_dylist_route.vue')
                 }
-            }
+            )
+        } else {
+            children.push(
+                {
+                    path: menu_data.menu_list[item].path,
+                    name: menu_data.menu_list[item].path,
+                    meta: {
+                        title: menu_data.menu_list[item].title
+                    },
+                    component: () => import('@/views/module' + menu_data.menu_list[item].path + '.vue')
+                }
+            )
         }
     }
     routers[0].children = routers[0].children.concat(children)
