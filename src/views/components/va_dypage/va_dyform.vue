@@ -99,6 +99,20 @@
                         </div>
                     </Upload>
                 </template>
+                <template v-else-if="item.type == 'checkboxtree'">
+                    <!-- https://github.com/lison16/tree-table-vue -->
+                    <tree-table
+                        :expand-key="item.extra.expand-key"
+                        :is-fold="true"
+                        :border="true"
+                        :stripe="false"
+                        :selectable="true"
+                        :expand-type="false"
+                        :selection-type="checkbox"
+                        :columns="item.options.columns"
+                        :data="item.options.data">
+                    </tree-table>
+                </template>
             </FormItem>
             <!-- 按钮 -->
             <Divider />

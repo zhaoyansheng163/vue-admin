@@ -4,6 +4,7 @@
       <Button
         v-for="(item,key) in dynamic_data.top_button_list"
         :key="key"
+        empty-text="当前没有数据"
         :type="item.type?item.type:'default'"
         :size="item.size?item.size:''"
         :icon="item.icon?item.icon:''"
@@ -12,6 +13,7 @@
         style="margin-bottom: 15px;">
         {{item.title}}
       </Button>
+      <!-- https://github.com/lison16/tree-table-vue -->
       <tree-table
         expand-key="title"
         :is-fold="false"
