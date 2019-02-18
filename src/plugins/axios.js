@@ -10,11 +10,12 @@
  * +----------------------------------------------------------------------
 */
 
-"use strict";
-import Vue from 'vue';
-import qs from 'qs';
-import axios from "axios";
-import util from '@/libs/util';
+"use strict"
+import Vue from 'vue'
+import qs from 'qs'
+import axios from "axios"
+import util from '@/libs/util'
+import router from '@/router'
 
 // Full config:  https://github.com/axios/axios#request-config
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + util.getToken();
@@ -51,8 +52,10 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   function(response) {
     // Do something with response data
+    //window.console.log(response)
     if(response.data.data.need_login == 1){
-      //console.log(Vue)
+      //window.console.log(router)
+      router.push('/core/user/login')
     }
     return response;
   },

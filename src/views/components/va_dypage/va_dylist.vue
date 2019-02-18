@@ -63,10 +63,10 @@ export default {
             axios.get(this.api)
                 .then(function (res) {
                     res = res.data
-                    if(res.code=='200'){
+                    if (res.code == '200') {
                         _this.dynamic_data = res.data.dynamic_data
                         _this.data_list = res.data.data_list
-                    }else{
+                    } else {
                         _this.$Message.error(res.msg)
                     }
                 })
@@ -99,7 +99,7 @@ export default {
                 }
             })
         },
-        right_button_modal(key,scope) {
+        right_button_modal(key, scope) {
             let _this = this
             let button_data = _this.dynamic_data.right_button_list[key]
             if(button_data.modal_data.type == 'confirm'){
