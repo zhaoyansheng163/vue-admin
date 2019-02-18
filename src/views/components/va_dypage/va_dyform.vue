@@ -102,6 +102,7 @@
                 <template v-else-if="item.type == 'checkboxtree'">
                     <!-- https://github.com/lison16/tree-table-vue -->
                     <tree-table
+                        :ref="item.name"
                         :expand-key="item.extra.expand-key"
                         :is-fold="true"
                         :border="true"
@@ -140,7 +141,7 @@ export default {
   },
   created() {
   },
-  mounted () {
+  beforeMount () {
     let _this = this
     // 获取表单构造数据
     axios.get(this.api)
@@ -161,22 +162,56 @@ export default {
   methods: {
       handleSubmit (name) {
         let _this = this
+        // 获取checkboxtree的选中项目
+        for(let index in _this.data.form_items) {
+            if (_this.data.form_items[index].type == 'checkboxtree') {
+                let admin_auth = _this.$refs[_this.data.form_items[index].name][0].getCheckedProp('admin_auth')
+                _this.data.form_values[_this.data.form_items[index].name] = admin_auth
+            }
+        };
+        //console.log(_this.data.form_values)
+        
         this.$refs[name].validate((valid) => {
             if (valid) {
                 // 提交数据
-                axios.post(this.api, this.data.form_values)
-                    .then(function (res) {
-                        res = res.data
-                        if(res.code == '200'){
-                            _this.$Message.success(res.msg)
-                            _this.$Modal.remove()
-                        }else{
-                            _this.$Message.error(res.msg)
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                    });
+                switch (this.data.form_method) {
+                    case 'post':
+                        axios.post(this.api, this.data.form_values)
+                            .then(function (res) {
+                                res = res.data
+                                if(res.code == '200'){
+                                    _this.$Message.success(res.msg)
+                                    _this.$Modal.remove()
+                                }else{
+                                    _this.$Message.error(res.msg)
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                            });
+                        break;
+                    case 'put':
+                        axios.put(this.api, this.data.form_values)
+                            .then(function (res) {
+                                res = res.data
+                                if(res.code == '200'){
+                                    _this.$Message.success(res.msg)
+                                    _this.$Modal.remove()
+                                }else{
+                                    _this.$Message.error(res.msg)
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                            });
+                        break;
+                
+                    default:
+                        _this.$Message.error('form_method not found')
+                        break;
+                }
+                
+                
             } else {
                 //this.$Message.error('错误!')
             }
