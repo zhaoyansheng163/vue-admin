@@ -1,57 +1,72 @@
 <template>
   <div>
     <Card shadow>
-      <Button
-        v-for="(item,key) in dynamic_data.top_button_list"
-        :key="key"
-        empty-text="当前没有数据"
-        :type="item.type?item.type:'default'"
-        :shape="item.shape?item.shape:'default'"
-        :size="item.size?item.size:'large'"
-        :icon="item.icon?item.icon:' '"
-        @click="top_button_modal(key)"
-        style="margin-bottom: 15px;">
-        {{item.title}}
-      </Button>
-      <!-- https://github.com/lison16/tree-table-vue -->
-      <tree-table
-        expand-key="title"
-        :is-fold="false"
-        :border="true"
-        :stripe="true"
-        :expand-type="false"
-        :selectable="false"
-        :columns="dynamic_data.columns"
-        :data="data_list" >
-        <template slot="right_button_list" slot-scope="scope">
-            <Button
-                v-for="(item,key) in dynamic_data.right_button_list"
-                :key="key"
-                :type="item.type"
-                :size="item.size"
-                :icon="item.icon"
-                :shape="item.shape"
-                @click="right_button_modal(key,scope)"
-                style="margin-right: 3px;">
-                {{item.title}}
-            </Button>
+        <template v-for="(item,key) in dynamic_data.top_button_list">
+            <Modal :key="key" v-model="item.modal_data.show" scrollable footer-hide :width="item.modal_data.width?item.modal_data.width:600" :title="item.modal_data.title">
+                <VaDyform :api="item.modal_data.api_blank"></VaDyform>
+            </Modal>
         </template>
-      </tree-table>
+        <Button
+            v-for="(item,key) in dynamic_data.top_button_list"
+            :key="key"
+            empty-text="当前没有数据"
+            :type="item.type?item.type:'default'"
+            :shape="item.shape?item.shape:'default'"
+            :size="item.size?item.size:''"
+            :icon="item.icon?item.icon:' '"
+            @click="top_button_modal(key)"
+            style="margin-bottom: 15px;">
+            {{item.title}}
+        </Button>
+        <!-- https://github.com/lison16/tree-table-vue -->
+        <tree-table
+            expand-key="title"
+            :is-fold="false"
+            :border="true"
+            :stripe="true"
+            :expand-type="false"
+            :selectable="false"
+            :columns="dynamic_data.columns"
+            :data="data_list" >
+            <template slot="right_button_list" slot-scope="scope">
+                <Button
+                    v-for="(item,key) in dynamic_data.right_button_list"
+                    :key="key"
+                    :type="item.type"
+                    :size="item.size"
+                    :icon="item.icon"
+                    :shape="item.shape"
+                    @click="right_button_modal(key,scope)"
+                    style="margin-right: 3px;">
+                    {{item.title}}
+                </Button>
+            </template>
+        </tree-table>
+        <template v-for="(item,key) in dynamic_data.right_button_list">
+            <template v-if="item.modal_data.type == 'form'">
+                <Modal :key="key" v-model="item.modal_data.show" scrollable footer-hide :width="item.modal_data.width?item.modal_data.width:600" :title="item.modal_data.title">
+                    <VaDyform :api="item.modal_data.api_blank"></VaDyform>
+                </Modal>
+            </template>
+            <template v-else="item.modal_data.type == 'list'">
+                <Modal :key="key" v-model="item.modal_data.show" scrollable footer-hide :width="item.modal_data.width?item.modal_data.width:600" :title="item.modal_data.title">
+                    <DynamicList :api="item.modal_data.api_blank"></DynamicList>
+                </Modal>
+            </template>
+        </template>
     </Card>
   </div>
 </template>
 
 <script>
 import VaDyform from '@/views/components/va_dypage/va_dyform'
-import VaDylist from '@/views/components/va_dypage/va_dylist'
 export default {
     name: 'DynamicList',
     props: {
         api: ''
     },
     components: {
-        VaDyform,
-        VaDylist
+        VaDyform
     },
     data () {
         return {
@@ -87,23 +102,8 @@ export default {
                 });
         },
         top_button_modal(key) {
-            let _this = this
-            let button_data = _this.dynamic_data.top_button_list[key]
-            this.$Modal.success({
-                width: button_data.modal_data.width?button_data.modal_data.width:600,
-                scrollable: true,
-                title: button_data.modal_data.title?button_data.modal_data.title:'未指定标题',
-                iconName: 'ios-create-outline',
-                render: (h) => {
-                    return h(VaDyform, {
-                        props: {
-                            api: button_data.modal_data.api
-                        },
-                        on: {
-                        }
-                    })
-                }
-            })
+            this.dynamic_data.top_button_list[key].modal_data.api_blank = this.dynamic_data.top_button_list[key].modal_data.api
+            this.dynamic_data.top_button_list[key].modal_data.show = true
         },
         right_button_modal(key, scope) {
             let _this = this
@@ -114,6 +114,18 @@ export default {
                     params: {name: scope.row.name}
                 })
             } else {
+                var api_suffix = ''
+                if (_this.dynamic_data.right_button_list[key].modal_data.api_suffix) {
+                    let asd = _this.dynamic_data.right_button_list[key].modal_data.api_suffix
+                    console.log(asd)
+                    for(let v of asd) {
+                        console.log(v)
+                        api_suffix = api_suffix + '/' + scope.row[v]
+                    };
+                    console.log(api_suffix)
+                } else {
+                    api_suffix = '/' + scope.row.id
+                }
                 switch (button_data.modal_data.type) {
                     case 'confirm':
                         this.$Modal.confirm({
@@ -122,7 +134,7 @@ export default {
                             title: button_data.modal_data.title,
                             content: button_data.modal_data.content,
                             onOk: () => {
-                                axios.delete(button_data.modal_data.api + '/' + scope.row.id)
+                                axios.delete(button_data.modal_data.api + api_suffix)
                                     .then(function (res) {
                                         res = res.data
                                         if(res.code=='200'){
@@ -140,37 +152,15 @@ export default {
                         });
                         break;
                     case 'list':
-                        this.$Modal.success({
-                            width: button_data.modal_data.width?button_data.modal_data.width:600,
-                            scrollable: true,
-                            title: button_data.modal_data.title?button_data.modal_data.title:'未指定标题',
-                            render: (h) => {
-                                return h(VaDylist, {
-                                    props: {
-                                        api: button_data.modal_data.api + '/' + scope.row.name
-                                    },
-                                    on: {
-                                    }
-                                })
-                            }
-                        })
+                        _this.dynamic_data.right_button_list[key].modal_data.api_blank
+                            = _this.dynamic_data.right_button_list[key].modal_data.api + api_suffix
+                          
+                        _this.dynamic_data.right_button_list[key].modal_data.show = true
                         break;
-                
                     default:
-                        this.$Modal.warning({
-                            width: button_data.modal_data.width?button_data.modal_data.width:600,
-                            scrollable: true,
-                            title: button_data.modal_data.title?button_data.modal_data.title:'未指定标题',
-                            render: (h) => {
-                                return h(VaDyform, {
-                                    props: {
-                                        api: button_data.modal_data.api + '/' + scope.row.id
-                                    },
-                                    on: {
-                                    }
-                                })
-                            }
-                        })
+                        _this.dynamic_data.right_button_list[key].modal_data.api_blank 
+                            = _this.dynamic_data.right_button_list[key].modal_data.api + api_suffix
+                        _this.dynamic_data.right_button_list[key].modal_data.show = true
                         break;
                 }
             }

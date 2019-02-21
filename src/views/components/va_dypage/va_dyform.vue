@@ -1,6 +1,5 @@
 <template>
     <div class="form-wrapper">
-        <Divider />
         <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
             <FormItem v-for="(item,key,index) in data.form_items" :key="index" :label="item.title" :prop="item.name">
                 <!-- 文本框 -->
@@ -144,18 +143,20 @@ export default {
   beforeMount () {
     let _this = this
     // 获取表单构造数据
-    axios.get(this.api)
-        .then(function (res) {
-            res = res.data
-            if(res.code=='200'){
-                _this.data = res.data.form_data
-            }else{
-                _this.$Message.error(res.msg)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-        });
+    if (this.api) {
+        axios.get(this.api)
+            .then(function (res) {
+                res = res.data
+                if(res.code=='200'){
+                    _this.data = res.data.form_data
+                }else{
+                    _this.$Message.error(res.msg)
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+    }
   },
   computed: {
   },
@@ -223,6 +224,24 @@ export default {
     }
   },
   watch: {
+    api(){
+        let _this = this
+        // 获取表单构造数据
+        if (this.api) {
+            axios.get(this.api)
+                .then(function (res) {
+                    res = res.data
+                    if(res.code=='200'){
+                        _this.data = res.data.form_data
+                    }else{
+                        _this.$Message.error(res.msg)
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        }
+    }
   }
 }
 </script>
