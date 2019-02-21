@@ -18,12 +18,20 @@ export default {
     },
     created: function(){
     },
-    mounted: function(){
-        this.api = this.$route.meta.api
+    beforeMount: function(){
+        if (this.$route.params.name) {
+            this.api = this.$route.meta.api + '/' + this.$route.params.name
+        } else {
+            this.api = this.$route.meta.api
+        }
     },
     watch: {
         $route(){
-            this.api = this.$route.meta.api
+            if (this.$route.params.name) {
+                this.api = this.$route.meta.api + '/' + this.$route.params.name
+            } else {
+                this.api = this.$route.meta.api
+            }
         },
     }
 }

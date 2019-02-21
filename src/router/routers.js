@@ -54,7 +54,7 @@ if (typeof menu_data === 'object') {
         if(menu_data.menu_list[item].is_vadypage == '1'){
             children.push(
                 {
-                    path: menu_data.menu_list[item].path,
+                    path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
                     name: menu_data.menu_list[item].path,
                     meta: {
                         title: menu_data.menu_list[item].title,
@@ -66,7 +66,7 @@ if (typeof menu_data === 'object') {
         } else {
             children.push(
                 {
-                    path: menu_data.menu_list[item].path,
+                    path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
                     name: menu_data.menu_list[item].path,
                     meta: {
                         title: menu_data.menu_list[item].title

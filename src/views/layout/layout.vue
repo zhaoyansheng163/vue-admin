@@ -330,7 +330,7 @@
                                             if(menu_data.menu_list[item].is_vadypage == '1'){
                                                 children.push(
                                                     {
-                                                        path: menu_data.menu_list[item].path,
+                                                        path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
                                                         name: menu_data.menu_list[item].path,
                                                         meta: {
                                                             title: menu_data.menu_list[item].title,
@@ -342,7 +342,7 @@
                                             } else {
                                                 children.push(
                                                     {
-                                                        path: menu_data.menu_list[item].path,
+                                                        path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
                                                         name: menu_data.menu_list[item].path,
                                                         meta: {
                                                             title: menu_data.menu_list[item].title
@@ -459,6 +459,8 @@
         watch:{
             //地址栏变化了就触发这个添加方法
             $route(){
+                console.log('-------------------------')
+                console.log(this.$route)
                 this.addViewTags();
             }
         }
