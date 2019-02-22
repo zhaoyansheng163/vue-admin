@@ -2,8 +2,8 @@
   <div>
     <Card shadow>
         <template v-for="(item,key) in dynamic_data.top_button_list">
-            <Modal :key="key" v-model="item.modal_data.show" scrollable footer-hide :width="item.modal_data.width?item.modal_data.width:600" :title="item.modal_data.title">
-                <VaDyform :api="item.modal_data.api_blank"></VaDyform>
+            <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                <VaDyform :api="item.page_data.api_blank"></VaDyform>
             </Modal>
         </template>
         <Button
@@ -43,14 +43,14 @@
             </template>
         </tree-table>
         <template v-for="(item,key) in dynamic_data.right_button_list">
-            <template v-if="item.modal_data.type == 'form'">
-                <Modal :key="key" v-model="item.modal_data.show" scrollable footer-hide :width="item.modal_data.width?item.modal_data.width:600" :title="item.modal_data.title">
-                    <VaDyform :api="item.modal_data.api_blank"></VaDyform>
+            <template v-if="item.page_data.modal_type == 'form'">
+                <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                    <VaDyform :api="item.page_data.api_blank"></VaDyform>
                 </Modal>
             </template>
-            <template v-else="item.modal_data.type == 'list'">
-                <Modal :key="key" v-model="item.modal_data.show" scrollable footer-hide :width="item.modal_data.width?item.modal_data.width:600" :title="item.modal_data.title">
-                    <DynamicList :api="item.modal_data.api_blank"></DynamicList>
+            <template v-else-if="item.page_data.modal_type == 'list'">
+                <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                    <DynamicList :api="item.page_data.api_blank"></DynamicList>
                 </Modal>
             </template>
         </template>
@@ -102,39 +102,36 @@ export default {
                 });
         },
         top_button_modal(key) {
-            this.dynamic_data.top_button_list[key].modal_data.api_blank = this.dynamic_data.top_button_list[key].modal_data.api
-            this.dynamic_data.top_button_list[key].modal_data.show = true
+            this.dynamic_data.top_button_list[key].page_data.api_blank = this.dynamic_data.top_button_list[key].page_data.api
+            this.dynamic_data.top_button_list[key].page_data.show = true
         },
         right_button_modal(key, scope) {
             let _this = this
             let button_data = _this.dynamic_data.right_button_list[key]
-            if (button_data.page_type == 'replace') {
+            if (button_data.page_data.page_type == 'replace') {
                 _this.$router.replace({
-                    path: button_data.modal_data.route + '/' + scope.row.name,
+                    path: button_data.page_data.route + '/' + scope.row.name,
                     params: {name: scope.row.name}
                 })
             } else {
                 var api_suffix = ''
-                if (_this.dynamic_data.right_button_list[key].modal_data.api_suffix) {
-                    let asd = _this.dynamic_data.right_button_list[key].modal_data.api_suffix
-                    console.log(asd)
+                if (_this.dynamic_data.right_button_list[key].page_data.api_suffix) {
+                    let asd = _this.dynamic_data.right_button_list[key].page_data.api_suffix
                     for(let v of asd) {
-                        console.log(v)
                         api_suffix = api_suffix + '/' + scope.row[v]
                     };
-                    console.log(api_suffix)
                 } else {
                     api_suffix = '/' + scope.row.id
                 }
-                switch (button_data.modal_data.type) {
+                switch (button_data.page_data.modal_type) {
                     case 'confirm':
-                        this.$Modal.confirm({
-                            okText: button_data.modal_data.okText,
-                            cancelText: button_data.modal_data.cancelText,
-                            title: button_data.modal_data.title,
-                            content: button_data.modal_data.content,
+                        _this.$Modal.confirm({
+                            okText: button_data.page_data.okText,
+                            cancelText: button_data.page_data.cancelText,
+                            title: button_data.page_data.title,
+                            content: button_data.page_data.content,
                             onOk: () => {
-                                axios.delete(button_data.modal_data.api + api_suffix)
+                                axios.delete(button_data.page_data.api + api_suffix)
                                     .then(function (res) {
                                         res = res.data
                                         if(res.code=='200'){
@@ -152,15 +149,15 @@ export default {
                         });
                         break;
                     case 'list':
-                        _this.dynamic_data.right_button_list[key].modal_data.api_blank
-                            = _this.dynamic_data.right_button_list[key].modal_data.api + api_suffix
+                        _this.dynamic_data.right_button_list[key].page_data.api_blank
+                            = _this.dynamic_data.right_button_list[key].page_data.api + api_suffix
                           
-                        _this.dynamic_data.right_button_list[key].modal_data.show = true
+                        _this.dynamic_data.right_button_list[key].page_data.show = true
                         break;
                     default:
-                        _this.dynamic_data.right_button_list[key].modal_data.api_blank 
-                            = _this.dynamic_data.right_button_list[key].modal_data.api + api_suffix
-                        _this.dynamic_data.right_button_list[key].modal_data.show = true
+                        _this.dynamic_data.right_button_list[key].page_data.api_blank 
+                            = _this.dynamic_data.right_button_list[key].page_data.api + api_suffix
+                        _this.dynamic_data.right_button_list[key].page_data.show = true
                         break;
                 }
             }
