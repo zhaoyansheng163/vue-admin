@@ -57,7 +57,7 @@
         methods: {
             handleSubmit () {
                 let _this = this
-                axios.post('v1/core/user/login', {
+                axios.post('/v1/core/user/login', {
                         identity_type: 0,
                         identifier: _this.formLogin.account,
                         credential: _this.formLogin.password

@@ -184,13 +184,11 @@
                         <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0px', cursor: 'pointer'}" type="md-menu" size="24"></Icon>
                     </div>
                     <div class="right">
-                        <div>
-                            <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
-                        </div>
+                        
                         <Dropdown style="margin-right: 15px;">
-                            <a href="javascript:void(0)" style="font-size: 14px;">
+                            <a href="javascript:void(0)" style="font-size: 14px;color: #515a6e;">
                                 访问前台
-                                <Icon type="md-arrow-dropdown" style="font-size: 18px;"></Icon>
+                                <Icon type="md-arrow-dropdown" style="margin-left: -5px;font-size: 18px;"></Icon>
                             </a>
                             <DropdownMenu slot="list">
                                 <DropdownItem>
@@ -203,6 +201,12 @@
                                 <DropdownItem>手机App</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
+                        <a @click="cleanRuntime" style="font-size: 14px;margin-right: 15px;color: #515a6e;">
+                            清除缓存
+                        </a>
+                        <div>
+                            <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+                        </div>
                         <Dropdown>
                             <a href="javascript:void(0)" style="font-size: 14px;">
                                 <Badge>
@@ -313,11 +317,11 @@
             // 登录获取菜单
             let _this = this;
             if (menu_data.length == 0) {
-                axios.get('v1/admin/core/menu/trees')
+                axios.get('/v1/admin/core/menu/trees')
                     .then(function (res) {
                         res = res.data;
                         if (res.code=='200') {
-                            axios.get('v1/admin/core/menu/lists')
+                            axios.get('/v1/admin/core/menu/lists')
                                 .then(function (res1) {
                                     res1 = res1.data;
                                     if (res1.code=='200') {
@@ -454,6 +458,28 @@
                 }]
                 this.$store.dispatch('setVisitedViews', views)
                 this.$router.push(this.$route.meta.name)
+            },
+
+            // 清除缓存
+            cleanRuntime () {
+                //清楚服务器缓存
+                let _this = this
+                axios.delete('/v1/admin/core/system/cleanRuntime')
+                    .then(function (res) {
+                        res = res.data;
+                        if (res.code=='200') {
+                            //清除本地缓存
+                            _this.$store.dispatch('setMenuList', [])
+                            //刷新页面
+                            window.location.reload();
+                            _this.$router.go(0)
+                        } else {
+                            alert(res.msg);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
         },
         watch:{

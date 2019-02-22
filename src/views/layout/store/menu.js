@@ -29,7 +29,7 @@ export default {
      actions: { 
         setMenuList({commit},data){
             //通过解构赋值得到commit方法
-            commit('set_menu_list',data)
+            commit('set_menu_list', data)
         }
      }
 }
