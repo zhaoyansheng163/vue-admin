@@ -10,6 +10,10 @@
                 <template v-else-if="item.type == 'textarea'">
                     <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.placeholder"></Input>                    
                 </template>
+                <!-- 自定义数组 -->
+                <template v-else-if="item.type == 'array'">
+                    <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.placeholder"></Input>                    
+                </template>
                 <!-- 下拉框 -->
                 <template v-else-if="item.type == 'select'">
                     <Select v-model="data.form_values[item.name]">
