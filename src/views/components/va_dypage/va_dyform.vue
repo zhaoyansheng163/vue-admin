@@ -121,9 +121,9 @@
             </FormItem>
             <!-- 按钮 -->
             <Divider />
-            <FormItem style="text-align:right">
+            <FormItem style="text-align:left">
+                <Button type="primary" size="large" style="margin-right: 15px" @click="handleSubmit(ref)">确认提交</Button>
                 <Button type="text" size="large" @click="handleReset(ref)">取消操作</Button>
-                <Button type="primary" size="large" style="margin-left: 15px" @click="handleSubmit(ref)">确认提交</Button>
             </FormItem>
         </Form>
     </div>

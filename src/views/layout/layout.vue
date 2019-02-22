@@ -331,29 +331,33 @@
                                         }
                                         _this.$store.dispatch('setMenuList', menu_data);
                                         for(let item in menu_data.menu_list) {
-                                            if(menu_data.menu_list[item].is_iadypage == '1'){
-                                                children.push(
-                                                    {
-                                                        path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
-                                                        name: menu_data.menu_list[item].path,
-                                                        meta: {
-                                                            title: menu_data.menu_list[item].title,
-                                                            api: menu_data.menu_list[item].api
-                                                        },
-                                                        component: () => import('@/views/components/va_dypage/va_dylist_route.vue')
-                                                    }
-                                                )
-                                            } else {
-                                                children.push(
-                                                    {
-                                                        path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
-                                                        name: menu_data.menu_list[item].path,
-                                                        meta: {
-                                                            title: menu_data.menu_list[item].title
-                                                        },
-                                                        component: () => import('@/views/module' + menu_data.menu_list[item].path + '.vue')
-                                                    }
-                                                )
+                                            switch (menu_data.menu_list[item].route_type) {
+                                                case 'route':
+                                                    children.push(
+                                                        {
+                                                            path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
+                                                            name: menu_data.menu_list[item].path,
+                                                            meta: {
+                                                                title: menu_data.menu_list[item].title
+                                                            },
+                                                            component: () => import('@/views/module' + menu_data.menu_list[item].path + '.vue')
+                                                        }
+                                                    )
+                                                    break;
+                                            
+                                                default:
+                                                    children.push(
+                                                        {
+                                                            path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
+                                                            name: menu_data.menu_list[item].path,
+                                                            meta: {
+                                                                title: menu_data.menu_list[item].title,
+                                                                api: menu_data.menu_list[item].api
+                                                            },
+                                                            component: () => import('@/views/components/va_dypage/va_dy' + menu_data.menu_list[item].route_type + '_route.vue')
+                                                        }
+                                                    )
+                                                    break;
                                             }
                                         }
                                         routes[0].children = children
