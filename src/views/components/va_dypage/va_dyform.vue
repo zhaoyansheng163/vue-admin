@@ -22,14 +22,14 @@
                 <template v-else-if="item.type == 'radio'">
                     <RadioGroup v-model="data.form_values[item.name]">
                         <Radio v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.value">
-                            {{item1.title}}
+                            <span>{{item1.title}}</span>
                         </Radio>
                     </RadioGroup>
                 </template>
                 <!-- 多选框 -->
-                <template v-else-if="item.type == 'input'">
+                <template v-else-if="item.type == 'checkbox'">
                     <CheckboxGroup v-model="data.form_values[item.name]">
-                        <Checkbox :label="item1.title"></Checkbox>
+                        <Checkbox v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.title"></Checkbox>
                     </CheckboxGroup>
                 </template>
                 <!-- 开关 -->
@@ -76,7 +76,7 @@
                     <ColorPicker v-model="data.form_values[item.name]" />
                 </template>
                 <!-- 单文件上传 -->
-                <template v-else-if="item.type == 'uploadfile'">
+                <template v-else-if="item.type == 'file'">
                     <Upload
                         type="drag"
                         :action="item.action">
@@ -87,7 +87,7 @@
                     </Upload>
                 </template>
                 <!-- 多文件上传 -->
-                <template v-else-if="item.type == 'uploadfiles'">
+                <template v-else-if="item.type == 'files'">
                     <Upload
                         multiple
                         type="drag"
@@ -113,6 +113,7 @@
                         :data="item.extra.data">
                     </tree-table>
                 </template>
+                <div style="color: #aaa;font-size: 12px;">{{item.tip}}</div>
             </FormItem>
             <!-- 按钮 -->
             <Divider />
@@ -211,9 +212,7 @@ export default {
                     default:
                         _this.$Message.error('form_method not found')
                         break;
-                }
-                
-                
+                } 
             } else {
                 //this.$Message.error('错误!')
             }
