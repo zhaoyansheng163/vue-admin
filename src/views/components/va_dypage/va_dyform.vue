@@ -13,7 +13,7 @@
                 <!-- 下拉框 -->
                 <template v-else-if="item.type == 'select'">
                     <Select v-model="data.form_values[item.name]">
-                        <Option v-for="(item1,key1,index1) in item.options" :key="index1" :value="item1.value">
+                        <Option v-for="(item1,key1,index1) in item.extra.options" :key="index1" :value="item1.value">
                             {{item1.title}}
                         </Option>
                     </Select>
@@ -21,7 +21,7 @@
                 <!-- 单选框 -->
                 <template v-else-if="item.type == 'radio'">
                     <RadioGroup v-model="data.form_values[item.name]">
-                        <Radio v-for="(item1,key1,index1) in item.options" :key="index1" :label="item1.value">
+                        <Radio v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.value">
                             {{item1.title}}
                         </Radio>
                     </RadioGroup>
@@ -35,8 +35,8 @@
                 <!-- 开关 -->
                 <template v-else-if="item.type == 'switch'">
                     <i-switch v-model="data.form_values[item.name]" size="large">
-                        <span slot="open">{{item1.options[0].title}}</span>
-                        <span slot="close">{{item1.options[1].title}}</span>
+                        <span slot="open">{{item1.extra.options[0].title}}</span>
+                        <span slot="close">{{item1.extra.options[1].title}}</span>
                     </i-switch>
                 </template>
                 <!-- 滑块 -->
@@ -69,7 +69,7 @@
                 </template>
                 <!-- 级联选择 -->
                 <template v-else-if="item.type == 'cascader'">
-                    <Cascader :data="item.options" v-model="data.form_values[item.name]" size="large"></Cascader>
+                    <Cascader :data="item.extra.options" v-model="data.form_values[item.name]" size="large"></Cascader>
                 </template>
                 <!-- 颜色选择器 -->
                 <template v-else-if="item.type == 'colorpicker'">
@@ -109,8 +109,8 @@
                         :selectable="true"
                         :expand-type="false"
                         :selection-type="checkbox"
-                        :columns="item.options.columns"
-                        :data="item.options.data">
+                        :columns="item.extra.columns"
+                        :data="item.extra.data">
                     </tree-table>
                 </template>
             </FormItem>
@@ -149,6 +149,7 @@ export default {
                 res = res.data
                 if(res.code=='200'){
                     _this.data = res.data.form_data
+                    console.log(res.data)
                 }else{
                     _this.$Message.error(res.msg)
                 }

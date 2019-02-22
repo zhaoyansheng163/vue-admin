@@ -1,13 +1,13 @@
 <template>
   <div>
     <Card shadow>
-        <template v-for="(item,key) in dynamic_data.top_button_list">
+        <template v-for="(item,key) in list_data.top_button_list">
             <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                 <VaDyform :api="item.page_data.api_blank"></VaDyform>
             </Modal>
         </template>
         <Button
-            v-for="(item,key) in dynamic_data.top_button_list"
+            v-for="(item,key) in list_data.top_button_list"
             :key="key"
             empty-text="当前没有数据"
             :type="item.type?item.type:'default'"
@@ -26,11 +26,11 @@
             :stripe="true"
             :expand-type="false"
             :selectable="false"
-            :columns="dynamic_data.columns"
+            :columns="list_data.columns"
             :data="data_list" >
             <template slot="right_button_list" slot-scope="scope">
                 <Button
-                    v-for="(item,key) in dynamic_data.right_button_list"
+                    v-for="(item,key) in list_data.right_button_list"
                     :key="key"
                     :type="item.type"
                     :size="item.size"
@@ -42,7 +42,7 @@
                 </Button>
             </template>
         </tree-table>
-        <template v-for="(item,key) in dynamic_data.right_button_list">
+        <template v-for="(item,key) in list_data.right_button_list">
             <template v-if="item.page_data.modal_type == 'form'">
                 <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                     <VaDyform :api="item.page_data.api_blank"></VaDyform>
@@ -71,7 +71,7 @@ export default {
     data () {
         return {
             data_list: [],
-            dynamic_data: {}
+            list_data: {}
         }
     },
     watch: {
@@ -91,7 +91,7 @@ export default {
                 .then(function (res) {
                     res = res.data
                     if (res.code == '200') {
-                        _this.dynamic_data = res.data.dynamic_data
+                        _this.list_data = res.data.list_data
                         _this.data_list = res.data.data_list
                     } else {
                         _this.$Message.error(res.msg)
@@ -102,12 +102,12 @@ export default {
                 });
         },
         top_button_modal(key) {
-            this.dynamic_data.top_button_list[key].page_data.api_blank = this.dynamic_data.top_button_list[key].page_data.api
-            this.dynamic_data.top_button_list[key].page_data.show = true
+            this.list_data.top_button_list[key].page_data.api_blank = this.list_data.top_button_list[key].page_data.api
+            this.list_data.top_button_list[key].page_data.show = true
         },
         right_button_modal(key, scope) {
             let _this = this
-            let button_data = _this.dynamic_data.right_button_list[key]
+            let button_data = _this.list_data.right_button_list[key]
             if (button_data.page_data.page_type == 'replace') {
                 _this.$router.replace({
                     path: button_data.page_data.route + '/' + scope.row.name,
@@ -115,8 +115,8 @@ export default {
                 })
             } else {
                 var api_suffix = ''
-                if (_this.dynamic_data.right_button_list[key].page_data.api_suffix) {
-                    let asd = _this.dynamic_data.right_button_list[key].page_data.api_suffix
+                if (_this.list_data.right_button_list[key].page_data.api_suffix) {
+                    let asd = _this.list_data.right_button_list[key].page_data.api_suffix
                     for(let v of asd) {
                         api_suffix = api_suffix + '/' + scope.row[v]
                     };
@@ -149,15 +149,15 @@ export default {
                         });
                         break;
                     case 'list':
-                        _this.dynamic_data.right_button_list[key].page_data.api_blank
-                            = _this.dynamic_data.right_button_list[key].page_data.api + api_suffix
+                        _this.list_data.right_button_list[key].page_data.api_blank
+                            = _this.list_data.right_button_list[key].page_data.api + api_suffix
                           
-                        _this.dynamic_data.right_button_list[key].page_data.show = true
+                        _this.list_data.right_button_list[key].page_data.show = true
                         break;
                     default:
-                        _this.dynamic_data.right_button_list[key].page_data.api_blank 
-                            = _this.dynamic_data.right_button_list[key].page_data.api + api_suffix
-                        _this.dynamic_data.right_button_list[key].page_data.show = true
+                        _this.list_data.right_button_list[key].page_data.api_blank 
+                            = _this.list_data.right_button_list[key].page_data.api + api_suffix
+                        _this.list_data.right_button_list[key].page_data.show = true
                         break;
                 }
             }
