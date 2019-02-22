@@ -331,7 +331,7 @@
                                         }
                                         _this.$store.dispatch('setMenuList', menu_data);
                                         for(let item in menu_data.menu_list) {
-                                            if(menu_data.menu_list[item].is_vadypage == '1'){
+                                            if(menu_data.menu_list[item].is_iadypage == '1'){
                                                 children.push(
                                                     {
                                                         path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
