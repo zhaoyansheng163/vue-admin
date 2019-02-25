@@ -166,11 +166,11 @@
                                     <Submenu v-if="item2.menu_type == '0'" :key="item2.path" :name="key1 + '-' + key2">
                                         <template slot="title">{{item2.title}}</template>
                                         <template v-for="(item3,key3) in item2.children" >
-                                            <MenuItem v-if="item3.menu_type == 1" :key="item3.path" :to="item3.path" :name="key1 + '-' + key2 + '-' + key3">{{item3.title}}</MenuItem>
+                                            <MenuItem v-if="item3.menu_type == 1" :key="item3.path" :to="item3.path + item3.api_params" :name="key1 + '-' + key2 + '-' + key3">{{item3.title}}</MenuItem>
                                         </template>
                                     </Submenu>
                                     <template v-else>
-                                        <MenuItem v-if="item2.menu_type == 1" :key="item2.path" :to="item2.path" :name="key1 + '-' + key2">{{item2.title}}</MenuItem>
+                                        <MenuItem v-if="item2.menu_type == 1" :key="item2.path" :to="item2.path + item2.api_params" :name="key1 + '-' + key2">{{item2.title}}</MenuItem>
                                     </template>
                                 </template>
                             </template>
@@ -352,7 +352,7 @@
                                                             name: menu_data.menu_list[item].path,
                                                             meta: {
                                                                 title: menu_data.menu_list[item].title,
-                                                                api: menu_data.menu_list[item].api
+                                                                api: menu_data.menu_list[item].api + menu_data.menu_list[item].api_params
                                                             },
                                                             component: () => import('@/views/components/va_dypage/va_dy' + menu_data.menu_list[item].route_type + '_route.vue')
                                                         }

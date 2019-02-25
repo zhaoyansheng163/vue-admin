@@ -72,7 +72,7 @@ if (typeof menu_data === 'object') {
                         name: menu_data.menu_list[item].path,
                         meta: {
                             title: menu_data.menu_list[item].title,
-                            api: menu_data.menu_list[item].api
+                            api: menu_data.menu_list[item].api + menu_data.menu_list[item].api_params
                         },
                         component: () => import('@/views/components/va_dypage/va_dy' + menu_data.menu_list[item].route_type + '_route.vue')
                     }
