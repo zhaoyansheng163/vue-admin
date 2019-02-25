@@ -28,8 +28,8 @@
                 :key="key"
                 empty-text="当前没有数据"
                 :type="item.type?item.type:'default'"
-                :shape="item.shape?item.shape:'default'"
-                :size="item.size?item.size:''"
+                :shape="item.shape?item.shape:'circle'"
+                :size="item.size?item.size:'default'"
                 :icon="item.icon?item.icon:' '"
                 @click="top_button_modal(key)"
                 style="margin-bottom: 15px;">

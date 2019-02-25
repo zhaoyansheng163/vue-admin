@@ -72,6 +72,7 @@ export default {
   beforeMount () {
   },
   mounted () {
+      this.loadData()
   },
   beforeUpdate () {
   },
@@ -151,10 +152,8 @@ export default {
         this.data = '';
         this.$refs[name].resetFields()
         this.$Modal.remove()
-    }
-  },
-  watch: {
-    api(){
+    },
+    loadData () {
         let _this = this
         // 获取表单构造数据
         if (this.api) {
@@ -175,6 +174,11 @@ export default {
                     console.log(error)
                 });
         }
+    }
+  },
+  watch: {
+    api(){
+        this.loadData()
     }
   }
 }
