@@ -215,9 +215,9 @@
                                 <Icon type="md-arrow-dropdown" style="font-size: 18px;"></Icon>
                             </a>
                             <DropdownMenu slot="list">
-                                <DropdownItem>我的消息</DropdownItem>
-                                <DropdownItem>修改密码</DropdownItem>
-                                <DropdownItem divided>注销</DropdownItem>
+                                <DropdownItem @click.native="todo">我的消息</DropdownItem>
+                                <DropdownItem @click.native="todo">修改密码</DropdownItem>
+                                <DropdownItem divided @click.native="logout">注销</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>
@@ -464,7 +464,7 @@
                 this.$router.push(this.$route.meta.name)
             },
 
-            // 清除缓存
+            //清除缓存
             cleanRuntime () {
                 //清楚服务器缓存
                 let _this = this
@@ -484,6 +484,31 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+            //注销登录
+            logout () {
+                //清楚服务器缓存
+                let _this = this
+                axios.delete('/v1/core/user/logout')
+                    .then(function (res) {
+                        res = res.data;
+                        if (res.code=='200') {
+                            //清除本地token
+                            _this.$store.dispatch('setToken', '')
+                            //刷新页面
+                            window.location.reload();
+                            _this.$router.go(0)
+                        } else {
+                            alert(res.msg);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            //todo
+            todo () {
+                alert('开发中...')
             }
         },
         watch:{

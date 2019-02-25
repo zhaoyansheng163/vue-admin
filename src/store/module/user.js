@@ -24,20 +24,20 @@ export default {
     getters: {
     },
     mutations: {
-      set_token:(state,data)=>{
+      set_token:(state, data)=>{
         state.token = data
         util.setToken(data)
       },
-      set_user_info:(state,data)=>{
+      set_user_info:(state, data)=>{
         state.user_info = data
       }
     },
     actions: { 
-      setToken({commit},data){
-        commit('set_token',data)
+      setToken({commit}, data){
+        commit('set_token', data)
       },
       setUserInfo({commit},data){
-        commit('set_user_info',data)
+        commit('set_user_info', data)
       },
     }
   }
