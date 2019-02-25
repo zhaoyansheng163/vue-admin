@@ -17,7 +17,7 @@
 <template>
   <div>
     <Card shadow>
-        <template v-if="this.data_list != ''">
+        <template v-show="this.data_list.length > 0">
             <template v-for="(item,key) in list_data.top_button_list">
                 <Modal :key="'modal' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                     <VaDyform :api="item.page_data.api_blank"></VaDyform>
@@ -44,7 +44,7 @@
                 :expand-type="false"
                 :selectable="false"
                 :columns="list_data.columns"
-                :data="data_list" >
+                :data="this.data_list" >
                 <template slot="right_button_list" slot-scope="scope">
                     <Button
                         v-for="(item,key) in list_data.right_button_list"
@@ -53,26 +53,26 @@
                         :shape="item.style.shape?item.shape:'circle'"
                         :size="item.style.size?item.size:'default'"
                         :icon="item.style.icon?item.icon:' '"
-                        @click="right_button_modal(key,scope)"
+                        @click="right_button_modal(key, scope)"
                         style="margin-right: 3px;">
                         {{item.title}}
                     </Button>
                 </template>
             </tree-table>
             <template v-for="(item,key) in list_data.right_button_list">
-                <template v-if="item.page_data.modal_type == 'form'">
+                <template v-show="item.page_data.modal_type == 'form'">
                     <Modal :key="'form' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                         <VaDyform :api="item.page_data.api_blank"></VaDyform>
                     </Modal>
                 </template>
-                <template v-else-if="item.page_data.modal_type == 'list'">
+                <template v-show="item.page_data.modal_type == 'list'">
                     <Modal :key="'list' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                         <DynamicList :api="item.page_data.api_blank"></DynamicList>
                     </Modal>
                 </template>
             </template>
         </template>
-        <template v-else>
+        <template v-show="this.data_list.length == 0">
             <Row>
                 <Col class="spin-col" span="24">
                     <Spin fix>
@@ -98,7 +98,7 @@ export default {
     },
     data () {
         return {
-            data_list: '',
+            data_list: [],
             list_data: {
                 top_button_list: {},
                 right_button_list: {},
