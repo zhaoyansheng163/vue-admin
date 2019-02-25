@@ -171,9 +171,12 @@ export default {
         label_width: 100
     }
   },
-  created() {
+  created () {
+    this.ref = 'form_' + (new Date()).getTime()
   },
   beforeMount () {
+  },
+  mounted () {
     let _this = this
     // 获取表单构造数据
     if (this.api) {
@@ -191,6 +194,14 @@ export default {
                 console.log(error)
             });
     }
+  },
+  beforeUpdate () {
+  },
+  updated () {
+  },
+  beforeDestroy () {
+  },
+  destroyed () {
   },
   computed: {
   },
@@ -251,6 +262,8 @@ export default {
         })
     },
     handleReset (name) {
+        this.api = '';
+        this.data = '';
         this.$refs[name].resetFields()
         this.$Modal.remove()
     }

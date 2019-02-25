@@ -110,7 +110,17 @@ export default {
     created() {
         this.loadData()
     },
+    beforeMount () {
+    },
     mounted(){
+    },
+    beforeUpdate () {
+    },
+    updated () {
+    },
+    beforeDestroy () {
+    },
+    destroyed () {
     },
     methods: {
         loadData(){
