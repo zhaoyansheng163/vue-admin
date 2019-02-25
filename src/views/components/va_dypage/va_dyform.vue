@@ -18,7 +18,7 @@
     <div class="form-wrapper">
          <template v-if="this.data != ''">
             <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
-                <FormItem v-for="(item,key,index) in data.form_items" :key="index" :label="item.title" :prop="item.name">
+                <FormItem v-for="(item,key,index) in data.form_items" :key="index" :label="item.title" >
                     <!-- 文本框 -->
                     <template v-if="item.type == 'text'">
                         <Input v-model="data.form_values[item.name]" :placeholder="item.extra.placeholder"></Input>
@@ -134,6 +134,23 @@
                             :data="item.extra.data">
                         </tree-table>
                     </template>
+                    <template v-else-if="item.type == 'formlist'">
+                        <Row>
+                            <div v-for="(item1,key1,index1) in item.extra.options" :key="index1">
+                                <Col :span="item1.span">
+                                    {{item1.title}}
+                                </Col>
+                            </div>
+                        </Row>
+                        <Row v-for="(item2,key2,index2) in data.form_values[item.name]" :key="index2">
+                            <div v-for="(item3,key3,index3) in item.extra.options" :key="index3">
+                                <Col :span="item3.span">
+                                    <Input v-model="data.form_values[item.name][key2][item3.value]"></Input>
+                                </Col>
+                            </div>
+                        </Row>
+                        <Button @click="formlist_addrow(item.name)" style="margin-top: 8px;">增加一行</Button>
+                    </template>
                     <div style="color: #aaa;font-size: 12px;">{{item.extra.tip}}</div>
                 </FormItem>
                 <!-- 按钮 -->
@@ -177,23 +194,6 @@ export default {
   beforeMount () {
   },
   mounted () {
-    let _this = this
-    // 获取表单构造数据
-    if (this.api) {
-        axios.get(this.api)
-            .then(function (res) {
-                res = res.data
-                if(res.code=='200'){
-                    _this.data = res.data.form_data
-                    console.log(res.data)
-                }else{
-                    _this.$Message.error(res.msg)
-                }
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
-    }
   },
   beforeUpdate () {
   },
@@ -206,6 +206,9 @@ export default {
   computed: {
   },
   methods: {
+      formlist_addrow (name) {
+        this.data.form_values[name].push(new Array());
+      },
       handleSubmit (name) {
         let _this = this
         // 获取checkboxtree的选中项目
@@ -215,7 +218,7 @@ export default {
                 _this.data.form_values[_this.data.form_items[index].name] = admin_auth
             }
         };
-        //console.log(_this.data.form_values)
+        console.log(_this.data.form_values)
         
         this.$refs[name].validate((valid) => {
             if (valid) {
@@ -277,6 +280,10 @@ export default {
                 .then(function (res) {
                     res = res.data
                     if(res.code=='200'){
+                        if (res.data.form_data.form_rules.length == 0) {
+                            res.data.form_data.form_rules = new  Object();
+                        }
+                        //console.log(res.data.form_data);
                         _this.data = res.data.form_data
                     }else{
                         _this.$Message.error(res.msg)
