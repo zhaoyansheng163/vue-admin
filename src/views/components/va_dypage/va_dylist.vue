@@ -151,21 +151,20 @@ export default {
         right_button_modal(key, scope) {
             let _this = this
             let button_data = _this.list_data.right_button_list[key]
+            var api_suffix = ''
+            if (_this.list_data.right_button_list[key].page_data.api_suffix) {
+                let asd = _this.list_data.right_button_list[key].page_data.api_suffix
+                for(let v of asd) {
+                    api_suffix = api_suffix + '/' + scope.row[v]
+                };
+            } else {
+                api_suffix = '/' + scope.row.id
+            }
             if (button_data.page_data.page_type == 'replace') {
                 _this.$router.replace({
-                    path: button_data.page_data.route + '/' + scope.row.name,
-                    params: {name: scope.row.name}
+                    path: button_data.page_data.route + '/' + scope.row.name
                 })
             } else {
-                var api_suffix = ''
-                if (_this.list_data.right_button_list[key].page_data.api_suffix) {
-                    let asd = _this.list_data.right_button_list[key].page_data.api_suffix
-                    for(let v of asd) {
-                        api_suffix = api_suffix + '/' + scope.row[v]
-                    };
-                } else {
-                    api_suffix = '/' + scope.row.id
-                }
                 switch (button_data.page_data.modal_type) {
                     case 'confirm':
                         _this.$Modal.confirm({

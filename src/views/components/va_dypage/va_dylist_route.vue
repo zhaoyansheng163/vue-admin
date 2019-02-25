@@ -19,18 +19,28 @@ export default {
     created: function(){
     },
     beforeMount: function(){
-        if (this.$route.params.name) {
-            this.api = this.$route.meta.api + '/' + this.$route.params.name
-        } else {
-            this.api = this.$route.meta.api
-        }
+        let _this = this
+            let length = this.$route.params.length
+            if (length > 0) {
+                this.$route.params.forEach(function(e){  
+                    _this.$route.meta.api = _this.$route.meta.api + '/' + _this.$route.params[e]
+                });
+                _this.api = _this.$route.meta.api
+            } else {
+                _this.api = _this.$route.meta.api
+            }
     },
     watch: {
         $route(){
-            if (this.$route.params.name) {
-                this.api = this.$route.meta.api + '/' + this.$route.params.name
+            let _this = this
+            let length = this.$route.params.length
+            if (length > 0) {
+                this.$route.params.forEach(function(e){  
+                    _this.$route.meta.api = _this.$route.meta.api + '/' + _this.$route.params[e]
+                });
+                _this.api = _this.$route.meta.api
             } else {
-                this.api = this.$route.meta.api
+                _this.api = _this.$route.meta.api
             }
         },
     }
