@@ -20,7 +20,7 @@
             <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
                 <template v-for="(item,key,index) in data.form_items">
                     <template v-if="data.form_rules[item.name] != ''">
-                        <VaDyformItem :key="index" :item="item" :form_values="data.form_values"></VaDyformItem>
+                        <VaDyformItem :key="index" :item="item" :form_values="data.form_values" :prop="item.name"></VaDyformItem>
                     </template>
                     <template v-else>
                         <VaDyformItem :key="index" :item="item" :form_values="data.form_values"></VaDyformItem>
@@ -84,9 +84,6 @@ export default {
   computed: {
   },
   methods: {
-      formlist_addrow (name) {
-        this.data.form_values[name].push(new Object());
-      },
       handleSubmit (name) {
         let _this = this
         // 获取checkboxtree的选中项目

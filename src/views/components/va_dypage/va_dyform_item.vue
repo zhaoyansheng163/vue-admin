@@ -1,9 +1,13 @@
 <template>
   <div>
-    <FormItem :label="item.title" :prop="item.name">
+    <FormItem :label="item.title" :prop="prop">
         <!-- 分割线 -->
         <template v-if="item.type == 'divider'">
             <Divider />
+        </template>
+        <!-- 静态文本 -->
+        <template v-if="item.type == 'static'">
+            <span>{{item.value}}</span>
         </template>
         <!-- 文本框 -->
         <template v-if="item.type == 'text'">
@@ -134,8 +138,9 @@
                         <Input v-model="form_values[item.name][key2][item3.value]"></Input>
                     </Col>
                 </div>
+                <Button type="dashed" @click="formlist_delrow(item.name)">删除</Button>
             </Row>
-            <Button @click="formlist_addrow(item.name)" style="margin-top: 8px;">增加一行</Button>
+            <Button type="dashed" icon="md-add" @click="formlist_addrow(item.name)" style="margin-top: 8px;">增加一行</Button>
         </template>
         <div style="color: #aaa;font-size: 12px;">{{item.extra.tip}}</div>
     </FormItem>
@@ -146,12 +151,18 @@
 export default {
     name: 'va_dyform_item',
     props: {
+        prop: '',
         item: {},
         form_values: {}
     },
     created: function(){
     },
     beforeMount: function(){
+    },
+    methods: {
+        formlist_addrow (name) {
+            this.form_values[name].push(new Object());
+        },
     },
     watch: {
     }
