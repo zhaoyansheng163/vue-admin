@@ -133,6 +133,7 @@ export default {
                     .then(function (res) {
                         res = res.data
                         if (res.code == '200') {
+                            //console.log(res)
                             _this.list_data = res.data.list_data
                             _this.data_list = res.data.data_list
                         } else {

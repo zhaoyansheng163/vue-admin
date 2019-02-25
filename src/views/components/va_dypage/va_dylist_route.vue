@@ -19,29 +19,27 @@ export default {
     created: function(){
     },
     beforeMount: function(){
-        let _this = this
-            let length = this.$route.params.length
-            if (length > 0) {
-                this.$route.params.forEach(function(e){  
-                    _this.$route.meta.api = _this.$route.meta.api + '/' + _this.$route.params[e]
-                });
-                _this.api = _this.$route.meta.api
-            } else {
-                _this.api = _this.$route.meta.api
+        this.loadData()
+    },
+    methods: {
+        loadData () {
+            if (this.$route.meta.dytype == 'dylist') {
+                let _this = this
+                let length = this.$route.params.length
+                if (length > 0) {
+                    this.$route.params.forEach(function(e){  
+                        _this.$route.meta.api = _this.$route.meta.api + '/' + _this.$route.params[e]
+                    });
+                    _this.api = _this.$route.meta.api
+                } else {
+                    _this.api = _this.$route.meta.api
+                }
             }
+        }
     },
     watch: {
         $route(){
-            let _this = this
-            let length = this.$route.params.length
-            if (length > 0) {
-                this.$route.params.forEach(function(e){  
-                    _this.$route.meta.api = _this.$route.meta.api + '/' + _this.$route.params[e]
-                });
-                _this.api = _this.$route.meta.api
-            } else {
-                _this.api = _this.$route.meta.api
-            }
+            this.loadData()
         },
     }
 }

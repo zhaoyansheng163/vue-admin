@@ -71,6 +71,7 @@ if (typeof menu_data === 'object') {
                         path: menu_data.menu_list[item].path + menu_data.menu_list[item].api_suffix,
                         name: menu_data.menu_list[item].path,
                         meta: {
+                            dytype: 'dy' + menu_data.menu_list[item].route_type,
                             title: menu_data.menu_list[item].title,
                             api: menu_data.menu_list[item].api + menu_data.menu_list[item].api_params
                         },
