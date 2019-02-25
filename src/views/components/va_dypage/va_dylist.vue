@@ -19,18 +19,18 @@
     <Card shadow>
         <template v-if="this.data_list != ''">
             <template v-for="(item,key) in list_data.top_button_list">
-                <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                <Modal :key="'modal' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                     <VaDyform :api="item.page_data.api_blank"></VaDyform>
                 </Modal>
             </template>
             <Button
                 v-for="(item,key) in list_data.top_button_list"
-                :key="key"
+                :key="'button' + key"
                 empty-text="当前没有数据"
-                :type="item.type?item.type:'default'"
-                :shape="item.shape?item.shape:'circle'"
-                :size="item.size?item.size:'default'"
-                :icon="item.icon?item.icon:' '"
+                :type="item.style.type?item.type:'default'"
+                :shape="item.style.shape?item.shape:'circle'"
+                :size="item.style.size?item.size:'default'"
+                :icon="item.style.icon?item.icon:' '"
                 @click="top_button_modal(key)"
                 style="margin-bottom: 15px;">
                 {{item.title}}
@@ -48,11 +48,11 @@
                 <template slot="right_button_list" slot-scope="scope">
                     <Button
                         v-for="(item,key) in list_data.right_button_list"
-                        :key="key"
-                        :type="item.type"
-                        :size="item.size"
-                        :icon="item.icon"
-                        :shape="item.shape"
+                        :key="'button' + key"
+                        :type="item.style.type?item.type:'default'"
+                        :shape="item.style.shape?item.shape:'circle'"
+                        :size="item.style.size?item.size:'default'"
+                        :icon="item.style.icon?item.icon:' '"
                         @click="right_button_modal(key,scope)"
                         style="margin-right: 3px;">
                         {{item.title}}
@@ -61,12 +61,12 @@
             </tree-table>
             <template v-for="(item,key) in list_data.right_button_list">
                 <template v-if="item.page_data.modal_type == 'form'">
-                    <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                    <Modal :key="'form' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                         <VaDyform :api="item.page_data.api_blank"></VaDyform>
                     </Modal>
                 </template>
                 <template v-else-if="item.page_data.modal_type == 'list'">
-                    <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                    <Modal :key="'list' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                         <DynamicList :api="item.page_data.api_blank"></DynamicList>
                     </Modal>
                 </template>
@@ -99,7 +99,10 @@ export default {
     data () {
         return {
             data_list: '',
-            list_data: {}
+            list_data: {
+                top_button_list: {},
+                right_button_list: {},
+            }
         }
     },
     watch: {
@@ -124,20 +127,22 @@ export default {
     },
     methods: {
         loadData(){
-            let _this = this
-            axios.get(this.api)
-                .then(function (res) {
-                    res = res.data
-                    if (res.code == '200') {
-                        _this.list_data = res.data.list_data
-                        _this.data_list = res.data.data_list
-                    } else {
-                        _this.$Message.error(res.msg)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error)
-                });
+            if (this.api) {
+                let _this = this
+                axios.get(this.api)
+                    .then(function (res) {
+                        res = res.data
+                        if (res.code == '200') {
+                            _this.list_data = res.data.list_data
+                            _this.data_list = res.data.data_list
+                        } else {
+                            _this.$Message.error(res.msg)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+            }
         },
         top_button_modal(key) {
             this.list_data.top_button_list[key].page_data.api_blank = this.list_data.top_button_list[key].page_data.api

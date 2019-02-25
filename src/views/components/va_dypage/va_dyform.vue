@@ -148,15 +148,15 @@ export default {
         } 
     },
     handleReset (name) {
-        this.api = '';
-        this.data = '';
+        // this.api = '';
+        // this.data = '';
         this.$refs[name].resetFields()
         this.$Modal.remove()
     },
     loadData () {
-        let _this = this
         // 获取表单构造数据
         if (this.api) {
+            let _this = this
             axios.get(this.api)
                 .then(function (res) {
                     res = res.data
