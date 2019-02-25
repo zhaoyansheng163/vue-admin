@@ -1,58 +1,86 @@
+<style>
+    .spin-icon-load{
+        animation: ani-spin 1s linear infinite;
+    }
+    @keyframes ani-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
+    }
+    .spin-col {
+        height: 100px;
+        position: relative;
+        border: 0px solid #eee;
+    }
+</style>
+
 <template>
   <div>
     <Card shadow>
-        <template v-for="(item,key) in list_data.top_button_list">
-            <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
-                <VaDyform :api="item.page_data.api_blank"></VaDyform>
-            </Modal>
-        </template>
-        <Button
-            v-for="(item,key) in list_data.top_button_list"
-            :key="key"
-            empty-text="当前没有数据"
-            :type="item.type?item.type:'default'"
-            :shape="item.shape?item.shape:'default'"
-            :size="item.size?item.size:''"
-            :icon="item.icon?item.icon:' '"
-            @click="top_button_modal(key)"
-            style="margin-bottom: 15px;">
-            {{item.title}}
-        </Button>
-        <!-- https://github.com/lison16/tree-table-vue -->
-        <tree-table
-            expand-key="title"
-            :is-fold="false"
-            :border="true"
-            :stripe="true"
-            :expand-type="false"
-            :selectable="false"
-            :columns="list_data.columns"
-            :data="data_list" >
-            <template slot="right_button_list" slot-scope="scope">
-                <Button
-                    v-for="(item,key) in list_data.right_button_list"
-                    :key="key"
-                    :type="item.type"
-                    :size="item.size"
-                    :icon="item.icon"
-                    :shape="item.shape"
-                    @click="right_button_modal(key,scope)"
-                    style="margin-right: 3px;">
-                    {{item.title}}
-                </Button>
-            </template>
-        </tree-table>
-        <template v-for="(item,key) in list_data.right_button_list">
-            <template v-if="item.page_data.modal_type == 'form'">
+        <template v-if="this.data_list != ''">
+            <template v-for="(item,key) in list_data.top_button_list">
                 <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                     <VaDyform :api="item.page_data.api_blank"></VaDyform>
                 </Modal>
             </template>
-            <template v-else-if="item.page_data.modal_type == 'list'">
-                <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
-                    <DynamicList :api="item.page_data.api_blank"></DynamicList>
-                </Modal>
+            <Button
+                v-for="(item,key) in list_data.top_button_list"
+                :key="key"
+                empty-text="当前没有数据"
+                :type="item.type?item.type:'default'"
+                :shape="item.shape?item.shape:'default'"
+                :size="item.size?item.size:''"
+                :icon="item.icon?item.icon:' '"
+                @click="top_button_modal(key)"
+                style="margin-bottom: 15px;">
+                {{item.title}}
+            </Button>
+            <!-- https://github.com/lison16/tree-table-vue -->
+            <tree-table
+                expand-key="title"
+                :is-fold="false"
+                :border="true"
+                :stripe="true"
+                :expand-type="false"
+                :selectable="false"
+                :columns="list_data.columns"
+                :data="data_list" >
+                <template slot="right_button_list" slot-scope="scope">
+                    <Button
+                        v-for="(item,key) in list_data.right_button_list"
+                        :key="key"
+                        :type="item.type"
+                        :size="item.size"
+                        :icon="item.icon"
+                        :shape="item.shape"
+                        @click="right_button_modal(key,scope)"
+                        style="margin-right: 3px;">
+                        {{item.title}}
+                    </Button>
+                </template>
+            </tree-table>
+            <template v-for="(item,key) in list_data.right_button_list">
+                <template v-if="item.page_data.modal_type == 'form'">
+                    <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                        <VaDyform :api="item.page_data.api_blank"></VaDyform>
+                    </Modal>
+                </template>
+                <template v-else-if="item.page_data.modal_type == 'list'">
+                    <Modal :key="key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
+                        <DynamicList :api="item.page_data.api_blank"></DynamicList>
+                    </Modal>
+                </template>
             </template>
+        </template>
+        <template v-else>
+            <Row>
+                <Col class="spin-col" span="24">
+                    <Spin fix>
+                        <Icon type="ios-loading" size=22 class="spin-icon-load"></Icon>
+                        <div>Loading</div>
+                    </Spin>
+                </Col>
+            </Row>
         </template>
     </Card>
   </div>
@@ -70,7 +98,7 @@ export default {
     },
     data () {
         return {
-            data_list: [],
+            data_list: '',
             list_data: {}
         }
     },
@@ -165,9 +193,3 @@ export default {
     }
 }
 </script>
-    
-<style>
-    .ivu-modal-confirm .ivu-modal-confirm-footer{
-        /* display: none; */
-    }
-</style>

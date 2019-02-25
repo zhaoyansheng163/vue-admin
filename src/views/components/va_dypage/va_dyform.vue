@@ -1,131 +1,159 @@
+<style>
+    .spin-icon-load{
+        animation: ani-spin 1s linear infinite;
+    }
+    @keyframes ani-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
+    }
+    .spin-col {
+        height: 100px;
+        position: relative;
+        border: 0px solid #eee;
+    }
+</style>
+
 <template>
     <div class="form-wrapper">
-        <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
-            <FormItem v-for="(item,key,index) in data.form_items" :key="index" :label="item.title" :prop="item.name">
-                <!-- 文本框 -->
-                <template v-if="item.type == 'text'">
-                    <Input v-model="data.form_values[item.name]" :placeholder="item.extra.placeholder"></Input>
-                </template>
-                <!-- 多行文本 -->
-                <template v-else-if="item.type == 'textarea'">
-                    <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.extra.placeholder"></Input>                    
-                </template>
-                <!-- 自定义数组 -->
-                <template v-else-if="item.type == 'array'">
-                    <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.extra.placeholder"></Input>                    
-                </template>
-                <!-- 下拉框 -->
-                <template v-else-if="item.type == 'select'">
-                    <Select v-model="data.form_values[item.name]">
-                        <Option v-for="(item1,key1,index1) in item.extra.options" :key="index1" :value="item1.value">
-                            {{item1.title}}
-                        </Option>
-                    </Select>
-                </template>
-                <!-- 单选框 -->
-                <template v-else-if="item.type == 'radio'">
-                    <RadioGroup v-model="data.form_values[item.name]">
-                        <Radio v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.value">
-                            <span>{{item1.title}}</span>
-                        </Radio>
-                    </RadioGroup>
-                </template>
-                <!-- 多选框 -->
-                <template v-else-if="item.type == 'checkbox'">
-                    <CheckboxGroup v-model="data.form_values[item.name]">
-                        <Checkbox v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.title"></Checkbox>
-                    </CheckboxGroup>
-                </template>
-                <!-- 开关 -->
-                <template v-else-if="item.type == 'switch'">
-                    <i-switch v-model="data.form_values[item.name]" size="large">
-                        <span slot="open">{{item1.extra.options[0].title}}</span>
-                        <span slot="close">{{item1.extra.options[1].title}}</span>
-                    </i-switch>
-                </template>
-                <!-- 滑块 -->
-                <template v-else-if="item.type == 'slider'">
-                    <Slider v-model="data.form_values[item.name]" range></Slider>
-                </template>
-                <!-- 日期选择 -->
-                <template v-else-if="item.type == 'datepicker'">
-                    <DatePicker type="date" placeholder="选择日期" v-model="idata.form_values[item.name]"></DatePicker>
-                </template>
-                <!-- 时间选择 -->
-                <template v-else-if="item.type == 'timepicker'">
-                    <TimePicker type="time" placeholder="选择时间" v-model="data.form_values[item.name]"></TimePicker>
-                </template>
-                <!-- 日期时间选择 -->
-                <template v-else-if="item.type == 'datetimepicker'">
-                    <Row>
-                        <Col span="11">
-                            <DatePicker type="date" placeholder="选择日期" v-model="data.form_values[item.name][0]"></DatePicker>
-                        </Col>
-                        <Col span="2" style="text-align: center">-</Col>
-                        <Col span="11">
-                            <TimePicker type="time" placeholder="选择时间" v-model="data.form_values[item.name][1]"></TimePicker>
-                        </Col>
-                    </Row>
-                </template>
-                <!-- 评分 -->
-                <template v-else-if="item.type == 'rate'">
-                    <Rate v-model="data.form_values[item.name]" />
-                </template>
-                <!-- 级联选择 -->
-                <template v-else-if="item.type == 'cascader'">
-                    <Cascader :data="item.extra.options" v-model="data.form_values[item.name]" size="large"></Cascader>
-                </template>
-                <!-- 颜色选择器 -->
-                <template v-else-if="item.type == 'colorpicker'">
-                    <ColorPicker v-model="data.form_values[item.name]" />
-                </template>
-                <!-- 单文件上传 -->
-                <template v-else-if="item.type == 'file'">
-                    <Upload
-                        type="drag"
-                        :action="item.action">
-                        <div style="padding: 20px 0">
-                            <Icon type="ios-cloud-upload" size="42" style="color: #3399ff"></Icon>
-                            <p>点击或者拖动文件到此处上传</p>
-                        </div>
-                    </Upload>
-                </template>
-                <!-- 多文件上传 -->
-                <template v-else-if="item.type == 'files'">
-                    <Upload
-                        multiple
-                        type="drag"
-                        :action="item.action">
-                        <div style="padding: 20px 0">
-                            <Icon type="ios-cloud-upload" size="42" style="color: #3399ff"></Icon>
-                            <p>点击或者拖动文件到此处上传</p>
-                        </div>
-                    </Upload>
-                </template>
-                <template v-else-if="item.type == 'checkboxtree'">
-                    <!-- https://github.com/lison16/tree-table-vue -->
-                    <tree-table
-                        :ref="item.name"
-                        :expand-key="item.extra.expand-key"
-                        :is-fold="true"
-                        :border="true"
-                        :stripe="false"
-                        :selectable="true"
-                        :expand-type="false"
-                        :selection-type="checkbox"
-                        :columns="item.extra.columns"
-                        :data="item.extra.data">
-                    </tree-table>
-                </template>
-                <div style="color: #aaa;font-size: 12px;">{{item.extra.tip}}</div>
-            </FormItem>
-            <!-- 按钮 -->
-            <Divider />
-            <FormItem style="text-align:left">
-                <Button type="primary" size="large" style="margin-right: 15px" @click="handleSubmit(ref)">确认提交</Button>
-                <Button type="text" size="large" @click="handleReset(ref)">取消操作</Button>
-            </FormItem>
-        </Form>
+         <template v-if="this.data != ''">
+            <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
+                <FormItem v-for="(item,key,index) in data.form_items" :key="index" :label="item.title" :prop="item.name">
+                    <!-- 文本框 -->
+                    <template v-if="item.type == 'text'">
+                        <Input v-model="data.form_values[item.name]" :placeholder="item.extra.placeholder"></Input>
+                    </template>
+                    <!-- 多行文本 -->
+                    <template v-else-if="item.type == 'textarea'">
+                        <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.extra.placeholder"></Input>                    
+                    </template>
+                    <!-- 自定义数组 -->
+                    <template v-else-if="item.type == 'array'">
+                        <Input v-model="data.form_values[item.name]" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.extra.placeholder"></Input>                    
+                    </template>
+                    <!-- 下拉框 -->
+                    <template v-else-if="item.type == 'select'">
+                        <Select v-model="data.form_values[item.name]">
+                            <Option v-for="(item1,key1,index1) in item.extra.options" :key="index1" :value="item1.value">
+                                {{item1.title}}
+                            </Option>
+                        </Select>
+                    </template>
+                    <!-- 单选框 -->
+                    <template v-else-if="item.type == 'radio'">
+                        <RadioGroup v-model="data.form_values[item.name]">
+                            <Radio v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.value">
+                                <span>{{item1.title}}</span>
+                            </Radio>
+                        </RadioGroup>
+                    </template>
+                    <!-- 多选框 -->
+                    <template v-else-if="item.type == 'checkbox'">
+                        <CheckboxGroup v-model="data.form_values[item.name]">
+                            <Checkbox v-for="(item1,key1,index1) in item.extra.options" :key="index1" :label="item1.title"></Checkbox>
+                        </CheckboxGroup>
+                    </template>
+                    <!-- 开关 -->
+                    <template v-else-if="item.type == 'switch'">
+                        <i-switch v-model="data.form_values[item.name]" size="large">
+                            <span slot="open">{{item1.extra.options[0].title}}</span>
+                            <span slot="close">{{item1.extra.options[1].title}}</span>
+                        </i-switch>
+                    </template>
+                    <!-- 滑块 -->
+                    <template v-else-if="item.type == 'slider'">
+                        <Slider v-model="data.form_values[item.name]" range></Slider>
+                    </template>
+                    <!-- 日期选择 -->
+                    <template v-else-if="item.type == 'datepicker'">
+                        <DatePicker type="date" placeholder="选择日期" v-model="idata.form_values[item.name]"></DatePicker>
+                    </template>
+                    <!-- 时间选择 -->
+                    <template v-else-if="item.type == 'timepicker'">
+                        <TimePicker type="time" placeholder="选择时间" v-model="data.form_values[item.name]"></TimePicker>
+                    </template>
+                    <!-- 日期时间选择 -->
+                    <template v-else-if="item.type == 'datetimepicker'">
+                        <Row>
+                            <Col span="11">
+                                <DatePicker type="date" placeholder="选择日期" v-model="data.form_values[item.name][0]"></DatePicker>
+                            </Col>
+                            <Col span="2" style="text-align: center">-</Col>
+                            <Col span="11">
+                                <TimePicker type="time" placeholder="选择时间" v-model="data.form_values[item.name][1]"></TimePicker>
+                            </Col>
+                        </Row>
+                    </template>
+                    <!-- 评分 -->
+                    <template v-else-if="item.type == 'rate'">
+                        <Rate v-model="data.form_values[item.name]" />
+                    </template>
+                    <!-- 级联选择 -->
+                    <template v-else-if="item.type == 'cascader'">
+                        <Cascader :data="item.extra.options" v-model="data.form_values[item.name]" size="large"></Cascader>
+                    </template>
+                    <!-- 颜色选择器 -->
+                    <template v-else-if="item.type == 'colorpicker'">
+                        <ColorPicker v-model="data.form_values[item.name]" />
+                    </template>
+                    <!-- 单文件上传 -->
+                    <template v-else-if="item.type == 'file'">
+                        <Upload
+                            type="drag"
+                            :action="item.action">
+                            <div style="padding: 20px 0">
+                                <Icon type="ios-cloud-upload" size="42" style="color: #3399ff"></Icon>
+                                <p>点击或者拖动文件到此处上传</p>
+                            </div>
+                        </Upload>
+                    </template>
+                    <!-- 多文件上传 -->
+                    <template v-else-if="item.type == 'files'">
+                        <Upload
+                            multiple
+                            type="drag"
+                            :action="item.action">
+                            <div style="padding: 20px 0">
+                                <Icon type="ios-cloud-upload" size="42" style="color: #3399ff"></Icon>
+                                <p>点击或者拖动文件到此处上传</p>
+                            </div>
+                        </Upload>
+                    </template>
+                    <template v-else-if="item.type == 'checkboxtree'">
+                        <!-- https://github.com/lison16/tree-table-vue -->
+                        <tree-table
+                            :ref="item.name"
+                            :expand-key="item.extra.expand-key"
+                            :is-fold="true"
+                            :border="true"
+                            :stripe="false"
+                            :selectable="true"
+                            :expand-type="false"
+                            :selection-type="checkbox"
+                            :columns="item.extra.columns"
+                            :data="item.extra.data">
+                        </tree-table>
+                    </template>
+                    <div style="color: #aaa;font-size: 12px;">{{item.extra.tip}}</div>
+                </FormItem>
+                <!-- 按钮 -->
+                <Divider />
+                <FormItem style="text-align:left">
+                    <Button type="primary" size="large" style="margin-right: 15px" @click="handleSubmit(ref)">确认提交</Button>
+                    <Button type="text" size="large" @click="handleReset(ref)">取消操作</Button>
+                </FormItem>
+            </Form>
+        </template>
+        <template v-else>
+            <Row>
+                <Col class="spin-col" span="24">
+                    <Spin fix>
+                        <Icon type="ios-loading" size=22 class="spin-icon-load"></Icon>
+                        <div>Loading</div>
+                    </Spin>
+                </Col>
+            </Row>
+        </template>
     </div>
 </template>
 
@@ -138,7 +166,7 @@ export default {
   data () {
     return {
         ref: 'form', //相当于子组件实例ID
-        data: {},
+        data: '',
         label_position: 'right',
         label_width: 100
     }
