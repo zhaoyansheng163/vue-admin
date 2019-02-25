@@ -189,7 +189,6 @@ export default {
                     case 'list':
                         _this.list_data.right_button_list[key].page_data.api_blank
                             = _this.list_data.right_button_list[key].page_data.api + api_suffix
-                          
                         _this.list_data.right_button_list[key].page_data.show = true
                         break;
                     default:
