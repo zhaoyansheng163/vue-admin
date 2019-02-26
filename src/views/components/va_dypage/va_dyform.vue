@@ -16,13 +16,13 @@
 
 <template>
     <div class="form-wrapper">
-         <template v-show="this.data.length > 0">
+         <template v-if="this.data != ''">
             <Form @submit.native.prevent :ref="ref" :model="data.form_values" :label-position="label_position" :label-width="label_width" :rules="data.form_rules">
                 <template v-for="(item,key,index) in data.form_items">
-                    <template v-show="data.form_rules[item.name] != ''">
+                    <template v-if="data.form_rules[item.name] != ''">
                         <VaDyformItem :key="index" :item="item" :form_values="data.form_values" :prop="item.name"></VaDyformItem>
                     </template>
-                    <template v-show="data.form_rules[item.name] == ''">
+                    <template v-else-if="data.form_rules[item.name] == ''">
                         <VaDyformItem :key="index" :item="item" :form_values="data.form_values"></VaDyformItem>
                     </template>
                 </template>
@@ -35,7 +35,7 @@
                 </FormItem>
             </Form>
         </template>
-        <template v-show="this.data.length == 0">
+        <template v-else>
             <Row>
                 <Col class="spin-col" span="24">
                     <Spin fix>
@@ -61,7 +61,7 @@ export default {
   data () {
     return {
         ref: 'form', //相当于子组件实例ID
-        data: {},
+        data: '',
         label_position: 'right',
         label_width: 100
     }

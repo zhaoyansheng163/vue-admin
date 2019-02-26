@@ -258,7 +258,7 @@
                         </Content>
                         <Content class="content-wrapper" :style="{height: 'calc(100%)', overflow: 'auto', padding: '15px'}">
                             <keep-alive>
-                                <router-view/>
+                                <router-view :key="key"/>
                             </keep-alive>
                         </Content>
                     </Layout>
@@ -279,6 +279,7 @@
         },
         data () {
             return {
+                key: '',
                 activeLeft: '0-0',
                 isCollapsed: false,
                 isFullscreen: false,
@@ -515,7 +516,7 @@
         watch:{
             //地址栏变化了就触发这个添加方法
             $route(){
-                //console.log(this.$route)
+                this.key = this.$route.name
                 this.addViewTags();
             }
         }

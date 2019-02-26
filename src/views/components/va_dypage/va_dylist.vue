@@ -17,7 +17,7 @@
 <template>
   <div>
     <Card shadow>
-        <template v-show="this.data_list.length > 0">
+        <template v-if="this.data_list.length > 0">
             <template v-for="(item,key) in list_data.top_button_list">
                 <Modal :key="'modal' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                     <VaDyform :api="item.page_data.api_blank"></VaDyform>
@@ -60,19 +60,19 @@
                 </template>
             </tree-table>
             <template v-for="(item,key) in list_data.right_button_list">
-                <template v-show="item.page_data.modal_type == 'form'">
+                <template v-if="item.page_data.modal_type == 'form'">
                     <Modal :key="'form' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                         <VaDyform :api="item.page_data.api_blank"></VaDyform>
                     </Modal>
                 </template>
-                <template v-show="item.page_data.modal_type == 'list'">
+                <template v-else-if="item.page_data.modal_type == 'list'">
                     <Modal :key="'list' + key" v-model="item.page_data.show" scrollable footer-hide :width="item.page_data.width?item.page_data.width:600" :title="item.page_data.title">
                         <DynamicList :api="item.page_data.api_blank"></DynamicList>
                     </Modal>
                 </template>
             </template>
         </template>
-        <template v-show="this.data_list.length == 0">
+        <template v-else>
             <Row>
                 <Col class="spin-col" span="24">
                     <Spin fix>
@@ -107,7 +107,7 @@ export default {
     },
     watch: {
         api(val) {
-            this.loadData()
+            //this.loadData()
         }
     },
     created() {
